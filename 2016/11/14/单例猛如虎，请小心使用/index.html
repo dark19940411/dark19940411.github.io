@@ -3,17 +3,24 @@
 <head>
   <meta charset="utf-8">
   
-  <title>Turtle的技术世界</title>
+  <title>单例猛如虎，请小心使用 | Turtle的技术世界</title>
   <meta name="viewport" content="width=device-width">
-  <meta name="description" content="iOS中级开发者 &amp; 前端刚入门">
-<meta property="og:type" content="website">
-<meta property="og:title" content="Turtle的技术世界">
-<meta property="og:url" content="http://tech.imturtle.cn/index.html">
+  <meta name="description" content="单例模式是一个在iOS里面备受使用的设计模式。但是我们在尽情使用它的时候，一定要注意到它其实也有很多隐含的问题。其实这篇文章也相当于看了objcio上的避免滥用单例的一篇总结。结合自己最近开发的心得，来讲一下单例的一些利与弊吧。
+创建方式首先单例最原始的创建方式就是
+static sharedInstance = nil;@implementation Singleton+(instancetyp">
+<meta property="og:type" content="article">
+<meta property="og:title" content="单例猛如虎，请小心使用">
+<meta property="og:url" content="http://tech.imturtle.cn/2016/11/14/单例猛如虎，请小心使用/index.html">
 <meta property="og:site_name" content="Turtle的技术世界">
-<meta property="og:description" content="iOS中级开发者 &amp; 前端刚入门">
+<meta property="og:description" content="单例模式是一个在iOS里面备受使用的设计模式。但是我们在尽情使用它的时候，一定要注意到它其实也有很多隐含的问题。其实这篇文章也相当于看了objcio上的避免滥用单例的一篇总结。结合自己最近开发的心得，来讲一下单例的一些利与弊吧。
+创建方式首先单例最原始的创建方式就是
+static sharedInstance = nil;@implementation Singleton+(instancetyp">
+<meta property="og:updated_time" content="2016-11-14T02:11:49.000Z">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="Turtle的技术世界">
-<meta name="twitter:description" content="iOS中级开发者 &amp; 前端刚入门">
+<meta name="twitter:title" content="单例猛如虎，请小心使用">
+<meta name="twitter:description" content="单例模式是一个在iOS里面备受使用的设计模式。但是我们在尽情使用它的时候，一定要注意到它其实也有很多隐含的问题。其实这篇文章也相当于看了objcio上的避免滥用单例的一篇总结。结合自己最近开发的心得，来讲一下单例的一些利与弊吧。
+创建方式首先单例最原始的创建方式就是
+static sharedInstance = nil;@implementation Singleton+(instancetyp">
   
     <link rel="alternative" href="/atom.xml" title="Turtle的技术世界" type="application/atom+xml">
   
@@ -45,9 +52,7 @@
 	</div>
 </header>
     <div id="main">
-      
-  
-    <article id="post-单例猛如虎，请小心使用" class="post">
+      <article id="post-单例猛如虎，请小心使用" class="post">
 	<footer class="entry-meta-header">
 		<span class="meta-elements date">
 			<a href="/2016/11/14/单例猛如虎，请小心使用/" class="article-date">
@@ -63,8 +68,8 @@
 	<header class="entry-header">
 		
   
-    <h1 itemprop="name" class="entry-title">
-      <a class="article-title" href="/2016/11/14/单例猛如虎，请小心使用/">单例猛如虎，请小心使用</a>
+    <h1 class="article-title entry-title" itemprop="name">
+      单例猛如虎，请小心使用
     </h1>
   
 
@@ -135,61 +140,26 @@
 		</div>
 	</footer>
 	
-</article>
-
-
-	<hr class="article-devider">
-
-
-
-  
-    <article id="post-Hexo教程（一）——搭建个人博客" class="post">
-	<footer class="entry-meta-header">
-		<span class="meta-elements date">
-			<a href="/2016/11/11/Hexo教程（一）——搭建个人博客/" class="article-date">
-  <time datetime="2016-11-11T07:45:19.000Z" itemprop="datePublished">2016-11-11</time>
-</a>
-		</span>
-		<span class="meta-elements author">Turtle</span>
-		<div class="commentscount">
-			
-		</div>
-	</footer>
-	
-	<header class="entry-header">
-		
-  
-    <h1 itemprop="name" class="entry-title">
-      <a class="article-title" href="/2016/11/11/Hexo教程（一）——搭建个人博客/">Hexo教程（一）——搭建个人博客</a>
-    </h1>
-  
-
-	</header>
-	<div class="entry-content">
-		
-    	
     
-	</div>
-	<footer class="entry-footer">
-		<div class="entry-meta-footer">
-			<span class="category">
-				
-			</span>
-			<span class="tags">
-				
-			</span>
-		</div>
-	</footer>
-	
+<nav id="article-nav">
+  
+  
+    <a href="/2016/11/11/Hexo教程（一）——搭建个人博客/" id="article-nav-older" class="article-nav-link-wrap">
+      <strong class="article-nav-caption">Older</strong>
+      <div class="article-nav-title">
+        
+          Hexo教程（一）——搭建个人博客
+        
+      </div>
+    </a>
+  
+</nav>
+
+  
 </article>
 
 
-	<hr class="article-devider">
 
-
-
-  
-  
 
     </div>
     <div class="mb-search">
