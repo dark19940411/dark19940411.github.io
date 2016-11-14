@@ -1,223 +1,347 @@
 <!DOCTYPE html>
-<html>
+<!--[if lte IE 8 ]>
+<html class="ie" xmlns="http://www.w3.org/1999/xhtml" xml:lang="en-US" lang="en-US">
+<![endif]-->
+<!--[if (gte IE 9)|!(IE)]><!-->
+<!--
+***************  *      *     *
+      8          *    *       *
+      8          *  *         *
+      8          **           *
+      8          *  *         *
+      8          *    *       *
+      8          *      *     *
+      8          *        *   ***********    -----Theme By Kieran(http://go.kieran.top)
+-->
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en-US" lang="en-US">
+<!--<![endif]-->
+
 <head>
-  <meta charset="utf-8">
-  
   <title>Turtle的技术世界</title>
-  <meta name="viewport" content="width=device-width">
-  <meta name="description" content="iOS中级开发者 &amp; 前端刚入门">
-<meta property="og:type" content="website">
-<meta property="og:title" content="Turtle的技术世界">
-<meta property="og:url" content="http://tech.imturtle.cn/index.html">
-<meta property="og:site_name" content="Turtle的技术世界">
-<meta property="og:description" content="iOS中级开发者 &amp; 前端刚入门">
-<meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="Turtle的技术世界">
-<meta name="twitter:description" content="iOS中级开发者 &amp; 前端刚入门">
+  <!-- Meta data -->
+    <meta http-equiv="Content-Type" content="text/html" charset="UTF-8" >
+    <meta http-equiv="X-UA-Compatible" content="IE=edge"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="generator" content="Turtle的技术世界">
+    <meta name="author" content="Turtle">
+    <meta name="description" content="iOS中级开发者 & 前端刚入门" />
+    <meta name="keywords" content="" />
+
+    <!-- Favicon, (keep icon in root folder) -->
+    <link rel="Shortcut Icon" href="/img/favicon.ico" type="image/ico">
+
+    <link rel="alternate" href="/atom.xml" title="Turtle的技术世界" type="application/atom+xml">
+    <link rel="stylesheet" href="/css/all.css" media="screen" type="text/css">
+	
+    <link rel="stylesheet" href="/highlightjs/vs.css" type="text/css">
+    
+    
+
+    <!-- Custom stylesheet, (add custom styles here, always load last) -->
+    <!-- Load our stylesheet for IE8 -->
+    <!--[if IE 8]>
+    <link rel="stylesheet" type="text/css" href="/css/ie8.css" />
+    <![endif]-->
+
+    <!-- Google Webfonts (Monserrat 400/700, Open Sans 400/600) -->
+    <link href='//fonts.useso.com/css?family=Montserrat:400,700' rel='stylesheet' type='text/css'>
+    <link href='//fonts.useso.com/css?family=Open+Sans:400,600' rel='stylesheet' type='text/css'>
+
+    <!-- Load our fonts individually if IE8+, to avoid faux bold & italic rendering -->
+    <!--[if IE]>
+    <link href='http://fonts.useso.com/css?family=Montserrat:400' rel='stylesheet' type='text/css'>
+    <link href='http://fonts.useso.com/css?family=Montserrat:700' rel='stylesheet' type='text/css'>
+    <link href='http://fonts.useso.com/css?family=Open+Sans:400' rel='stylesheet' type='text/css'>
+    <link href='http://fonts.useso.com/css?family=Open+Sans:600' rel='stylesheet' type='text/css'>
+    <![endif]-->
+
+    <!-- jQuery | Load our jQuery, with an alternative source fallback to a local version if request is unavailable -->
+    <script src="/js/jquery-1.11.1.min.js"></script>
+    <script>window.jQuery || document.write('<script src="js/jquery-1.11.1.min.js"><\/script>')</script>
+
+    <!-- Load these in the <head> for quicker IE8+ load times -->
+    <!-- HTML5 shim and Respond.js IE8 support of HTML5 elements and media queries -->
+    <!--[if lt IE 9]>
+    <script src="/js/html5shiv.min.js"></script>
+    <script src="/js/respond.min.js"></script>
+    <![endif]-->
+
+
+
+
+
+
+
+
+
+
   
-    <link rel="alternative" href="/atom.xml" title="Turtle的技术世界" type="application/atom+xml">
   
   
-    <link rel="icon" href="/favicon.png">
+
   
-  <link rel="stylesheet" href="/css/style.css">
-  <!--[if lt IE 9]><script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script><![endif]-->
-  
+  <style>.col-md-8.col-md-offset-2.opening-statement img{display:none;}</style>
 </head>
-<body>
-  <div id="container">
-    <div class="mobile-nav-panel">
-	<i class="icon-reorder icon-large"></i>
-</div>
-<header id="header">
-	<h1 class="blog-title">
-		<a href="/">Turtle的技术世界</a>
-	</h1>
-	<nav class="nav">
-		<ul>
-			<li><a href="/">Home</a></li><li><a href="/archives">Archives</a></li>
-			<li><a id="nav-search-btn" class="nav-icon" title="Search"></a></li>
-			<li><a href="/atom.xml" id="nav-rss-link" class="nav-icon" title="RSS Feed"></a></li>
-		</ul>
-	</nav>
-	<div id="search-form-wrap">
-		<form action="//google.com/search" method="get" accept-charset="UTF-8" class="search-form"><input type="search" name="q" results="0" class="search-form-input" placeholder="Search"><button type="submit" class="search-form-submit">&#xF002;</button><input type="hidden" name="sitesearch" value="http://tech.imturtle.cn"></form>
-	</div>
-</header>
-    <div id="main">
-      
-  
-    <article id="post-单例猛如虎，请小心使用" class="post">
-	<footer class="entry-meta-header">
-		<span class="meta-elements date">
-			<a href="/2016/11/14/单例猛如虎，请小心使用/" class="article-date">
-  <time datetime="2016-11-14T01:42:38.000Z" itemprop="datePublished">2016-11-14</time>
-</a>
-		</span>
-		<span class="meta-elements author">Turtle</span>
-		<div class="commentscount">
-			
-		</div>
-	</footer>
-	
-	<header class="entry-header">
-		
-  
-    <h1 itemprop="name" class="entry-title">
-      <a class="article-title" href="/2016/11/14/单例猛如虎，请小心使用/">单例猛如虎，请小心使用</a>
-    </h1>
-  
 
-	</header>
-	<div class="entry-content">
-		
-    	<p>单例模式是一个在iOS里面备受使用的设计模式。但是我们在尽情使用它的时候，一定要注意到它其实也有很多隐含的问题。<br>其实这篇文章也相当于看了objcio上的<a href="https://objccn.io/issue-13-2/" target="_blank" rel="external">避免滥用单例</a>的一篇总结。<br>结合自己最近开发的心得，来讲一下单例的一些利与弊吧。</p>
-<h2 id="创建方式"><a href="#创建方式" class="headerlink" title="创建方式"></a>创建方式</h2><p>首先单例最原始的创建方式就是</p>
-<p><pre><br><code><br>static sharedInstance = nil;<br>@implementation Singleton<br>+(instancetype)sharedInstance {<br>    if(sharedInstance) {<br>        sharedInstance = [[Singleton alloc] init];<br>    }<br>    return sharedInstance;<br>}<br>@end<br></code><br></pre><br>但是这种创建方式在多线程环境下会出问题，假如两条线程同时执行到if的话，就会各自获取到两个实例了。为了解决这个问题，我们可以想到上锁，于是有了下面这个版本：</p>
-<p><pre><br><code><br>static sharedInstance = nil;<br>@implementation Singleton<br>+(instancetype)sharedInstance {<br>    @synchronized(self)<br>        if(sharedInstance) {<br>            sharedInstance = [[Singleton alloc] init];<br>        }<br>    }<br>    return sharedInstance;<br>}<br>@end<br></code><br></pre><br>但是因为我们都知道，访问一个锁的开销很大，考虑到性能的问题，iOS在最后给我们推出了一个GCD上的API:<br><code>dispatch_once(dispatch_once_t *predicate,
-        DISPATCH_NOESCAPE dispatch_block_t block)</code><br>这个api确保了传入的block里的内容<strong>在程序运行期间只执行一次</strong>。运用这一点，我们可以很方便的写出单例模式的构建方法。</p>
-<p><pre><code><br>static sharedInstance = nil;<br>@implementation Singleton<br>+(instancetype)sharedInstance {<br>    static dispatch_once_t onceToken;<br>    dispatch_once(&amp;onceToken, ^{<br>        sharedInstance = [[Singleton alloc] init];<br>    });<br>    return sharedInstance;<br>}<br>@end<br></code></pre><br>没有异步问题，没有锁的访问，然后怎么样？完美。<br>但是现在，我们还有一个棘手的问题需要解决，我们需要屏蔽掉单例的其他初始化方式，因为我们总不想我们写好的一个单例最后还可以通过<code>alloc] init</code>的方式被初始化吧？下面我将介绍两种办法，皆是参考<a href="http://www.jianshu.com/p/7486ebfcd93b" target="_blank" rel="external">这篇文章</a>的。</p>
-<h3 id="第一种——将init用断言或者throw-exception的方式给屏蔽了"><a href="#第一种——将init用断言或者throw-exception的方式给屏蔽了" class="headerlink" title="第一种——将init用断言或者throw exception的方式给屏蔽了"></a>第一种——将init用断言或者throw exception的方式给屏蔽了</h3><p>上代码：</p>
-<p><pre><br><code><br>static sharedInstance = nil;<br>@implementation Singleton</code></pre></p>
-<pre><code>+(instancetype)sharedInstance {    //公开的接口
-    static dispatch_once_t onceToken;
-    dispatch_once(&amp;onceToken, ^{
-        sharedInstance = [[Singleton alloc] initPrivate];
-    });
-    return sharedInstance;
-}  
+<!--
+<body class="home-template">
+-->
+<body id="index" class="lightnav animsition">
 
--(instancetype)init {//禁止掉公开的init方法
-    @throw [NSException exceptionWithName:@&quot;这个是个单例&quot;
-                                   reason:@&quot;应该这样调用 [Singleton sharedInstance]&quot;
-                                 userInfo:nil];
-    return nil;
-}  
+      <!-- ============================ Off-canvas navigation =========================== -->
 
--(instancetype)initPrivate {//写一个私有的用来真正初始化的方法
-    self  = [super init];
-    if(self){
-        //做一些真正初始化的事。
-    }
-    return self;
-}
-@end
-</code></pre><p><br><br>第一种，就是简单粗暴的禁止外部调用[[Singleton alloc] init]来产生额外的实例，这也是我最喜欢的一种方式，原因等介绍完第二种方法以后再说。</p>
-<h3 id="第二种——重写-allocWithZone-和-copyWithZone方法确保其它创建方式无法创建新的实例"><a href="#第二种——重写-allocWithZone-和-copyWithZone方法确保其它创建方式无法创建新的实例" class="headerlink" title="第二种——重写+allocWithZone: 和-copyWithZone方法确保其它创建方式无法创建新的实例"></a>第二种——重写+allocWithZone: 和-copyWithZone方法确保其它创建方式无法创建新的实例</h3><p>上代码：</p>
-<p><pre><br><code><br>static Singleton <em>_instance;<br>@implementation Singleton<br>+ (instancetype)sharedInstance {<br>    static dispatch_once_t onceToken;<br>    dispatch_once(&amp;onceToken, ^{<br>        _instance = [[Singleton alloc] init];<br>    });<br>    return _instance;<br>}<br>+ (instancetype)allocWithZone:(struct _NSZone </em>)zone<br>{<br>    static dispatch_once_t onceToken;<br>    dispatch_once(&amp;onceToken, ^{<br>        _instance = [super allocWithZone:zone];<br>    });<br>    return _instance;<br>}<br>- (id)copyWithZone:(NSZone *)zone<br>{<br>    return _instance;<br>}<br>@end<br></code><br></pre><br>这样子写确保了外部调用+sharedInstance、alloc-init、-copy三种方法来获取Singleton的实例都会获取到同一个实例。但是我并不喜欢这种创建方式。原因就是第一种写法限制来外部只能通过sharedInstance的方式来获取单例，而第二种可以通过alloc-init的方式来获取实例的话就会和其他非单例类混在一起，尽管它本质是单例，但是你不觉得外表看起来也像是个单例会更好吗？而且这样子写代码也更加清晰。  </p>
-<h2 id="优点"><a href="#优点" class="headerlink" title="优点"></a>优点</h2><p>总结为两点：</p>
-<ul>
-<li>因为限制了实例数量，可以节省内存空间。</li>
-<li>为全局访问提供了一个入口，单例本身就相当于一个全局变量（这个其实也是缺点）</li>
-</ul>
-<h2 id="缺点"><a href="#缺点" class="headerlink" title="缺点"></a>缺点</h2><p>草草略过了单例的优点，我们来看看单例模式下的那些坑吧！  </p>
-<ol>
-<li><p>作为程序员，我们都应该拒绝全局变量，然而单例模式实际上就是一个全局变量。对于单例，在全局区域内，假如有异步的调用了单例的话，就很可能出现问题——譬如两条线程同时对一个单例的内部数据进行修改的话，这样就很可能会导致数据出错。</p>
-</li>
-<li><p>再来考虑一个情况，两个独立的毫无联系的模块A和B，单例S里有一个标记flag用来控制模块A的操作，而且这个标记位只允许A来使用。但是出于一些奇怪的原因（可能一个疲惫的程序员的误操作，也可能是方法调用错误）模块B也修改了flag，直接导致了模块A出现了重大错误。下面我们来看看这个情况的对象图：</p>
-<p> 所以，使用单例要小心，一不小心就会导致两个看似毫无联系的模块莫名其妙地相互影响了。这么看起来，似乎单例提供了一个全局访问的入口并非是一件好事啊。</p>
-</li>
-<li><p>而在objcio里面还讲了一种情况就是一个有用户登录然后还有好友列表的应用，登录之后朋友列表SPFriendListViewController里可以看到朋友的头像，然后作者实现了一个单例SPThumbnailCache来下载和缓存朋友们的头像。由于单例“create once, live forever”的特性，直到登出这个需求的出现之前，在这里都非常适用。登出功能一旦出现，意味着要清理掉所有缓存和更换一个SPThumbnailCache（其实我很好奇为什么作者不干脆写一个清理缓存的接口得了）。而由于dispatch_once的特点，单例没法反复创建，按照文中的意思，可以不使用dispatch_once来创建单例，接着再实现一个teardown方法来将单例置nil，完了再新建单例来满足需求。<br> 可是这种方法也有弊端，最后通过了一种叫依赖注入的方式解决了（依我看来，就是单例不适用于现在的需求啦，然后就不用单例了～）这个问题，有兴趣的可以看看<a href="https://objccn.io/issue-13-2/" target="_blank" rel="external">避免滥用单例</a>。</p>
-</li>
-</ol>
-<p>单例模式，也有弊端，一个是因为它的全局特性可能被滥用，二是因为需求变更可能导致当年写的代码再也不适用（这个就是上述的第三点，感觉并不好避免，看产品脸色吧！），使用的时候一定要小心为上啊！</p>
-
-    
-	</div>
-	<footer class="entry-footer">
-		<div class="entry-meta-footer">
-			<span class="category">
-				
-			</span>
-			<span class="tags">
-				
-			</span>
-		</div>
-	</footer>
-	
-</article>
-
-
-	<hr class="article-devider">
-
-
-
-  
-    <article id="post-Hexo教程（一）——搭建个人博客" class="post">
-	<footer class="entry-meta-header">
-		<span class="meta-elements date">
-			<a href="/2016/11/11/Hexo教程（一）——搭建个人博客/" class="article-date">
-  <time datetime="2016-11-11T07:45:19.000Z" itemprop="datePublished">2016-11-11</time>
-</a>
-		</span>
-		<span class="meta-elements author">Turtle</span>
-		<div class="commentscount">
-			
-		</div>
-	</footer>
-	
-	<header class="entry-header">
-		
-  
-    <h1 itemprop="name" class="entry-title">
-      <a class="article-title" href="/2016/11/11/Hexo教程（一）——搭建个人博客/">Hexo教程（一）——搭建个人博客</a>
-    </h1>
-  
-
-	</header>
-	<div class="entry-content">
-		
-    	
-    
-	</div>
-	<footer class="entry-footer">
-		<div class="entry-meta-footer">
-			<span class="category">
-				
-			</span>
-			<span class="tags">
-				
-			</span>
-		</div>
-	</footer>
-	
-</article>
-
-
-	<hr class="article-devider">
-
-
-
-  
-  
-
+    <div class="sb-slidebar sb-right sb-style-overlay sb-momentum-scrolling">
+        <div class="sb-close" aria-label="Close Menu" aria-hidden="true">
+            <img src="/img/close.png" alt="Close"/>
+        </div>
+        <!-- Lists in Slidebars -->
+        <ul class="sb-menu">
+            <li><a href="/" class="animsition-link" title="Home">Home</a></li>
+            <li><a href="/archives" class="animsition-link" title="archive">archives</a></li>
+            <!-- Dropdown Menu -->
+			 
+            <li>
+                <a class="sb-toggle-submenu">Works<span class="sb-caret"></span></a>
+                <ul class="sb-submenu">
+                    
+                        <li><a href="/" target="_BLANK" class="animsition-link">AAA</a></li>
+                    
+                        <li><a href="/atom.xml" target="_BLANK" class="animsition-link">BBB</a></li>
+                    
+                </ul>
+            </li>
+            
+            
+            
+            <li>
+                <a class="sb-toggle-submenu">Links<span class="sb-caret"></span></a>
+                <ul class="sb-submenu">
+                    
+                    <li><a href="http://go.kieran.top/" class="animsition-link">Kieran</a></li>
+                    
+                    <li><a href="http://domain.com/" class="animsition-link">Name</a></li>
+                    
+                </ul>
+            </li>
+            
+        </ul>
+        <!-- Lists in Slidebars -->
+        <ul class="sb-menu secondary">
+            <li><a href="/about.html" class="animsition-link" title="about">About</a></li>
+            <li><a href="/atom.xml" class="animsition-link" title="rss">RSS</a></li>
+        </ul>
     </div>
-    <div class="mb-search">
-  <form action="//google.com/search" method="get" accept-charset="utf-8">
-    <input type="search" name="q" results="0" placeholder="Search">
-    <input type="hidden" name="q" value="site:tech.imturtle.cn">
-  </form>
-</div>
-<footer id="footer">
-	<h1 class="footer-blog-title">
-		<a href="/">Turtle的技术世界</a>
-	</h1>
-	<span class="copyright">
-		&copy; 2016 Turtle<br>
-		Modify from <a href="http://sanographix.github.io/tumblr/apollo/" target="_blank">Apollo</a> theme, designed by <a href="http://www.sanographix.net/" target="_blank">SANOGRAPHIX.NET</a><br>
-		Powered by <a href="http://hexo.io/" target="_blank">Hexo</a>
-	</span>
-</footer>
     
+    <!-- ============================ END Off-canvas navigation =========================== -->
 
-<script src="//ajax.googleapis.com/ajax/libs/jquery/2.0.3/jquery.min.js"></script>
+    <!-- ============================ #sb-site Main Page Wrapper =========================== -->
+
+    <div id="sb-site">
+        <!-- #sb-site - All page content should be contained within this id, except the off-canvas navigation itself -->
+
+        <!-- ============================ Header & Logo bar =========================== -->
+
+        <div id="navigation" class="navbar navbar-fixed-top">
+            <div class="navbar-inner">
+                <div class="container">
+                    <!-- Nav logo -->
+                    <div class="logo">
+                        <a href="/" title="Logo" class="animsition-link">
+                         <img src="/img/turtle.png" alt="Logo" width="35px;"/> 
+                        </a>
+                    </div>
+                    <!-- // Nav logo -->
+                    <!-- Info-bar -->
+                    <nav>
+                        <ul class="nav">
+                            <li><a href="/" class="animsition-link">Turtle的技术世界</a></li>
+                            <li class="nolink"><span>Always </span>Creative.</li>
+                            
+                            <li><a href="https://github.com/" title="Github" target="_blank"><i class="icon-github"></i></a></li>
+                            
+                            
+                            <li><a href="https://twitter.com/" title="Twitter" target="_blank"><i class="icon-twitter"></i></a></li>
+                            
+                            
+                            <li><a href="https://www.facebook.com/" title="Facebook" target="_blank"><i class="icon-facebook"></i></a></li>
+                            
+                            
+                            <li><a href="https://google.com/" title="Google-Plus" target="_blank"><i class="icon-google-plus"></i></a></li>
+                            
+                            
+                            <li><a href="http://weibo.com/" title="Sina-Weibo" target="_blank"><i class="icon-sina-weibo"></i></a></li>
+                            
+                            <li class="nolink"><span>Welcome!</span></li>
+                        </ul>
+                    </nav>
+                    <!--// Info-bar -->
+                </div>
+                <!-- // .container -->
+                <div class="learnmore sb-toggle-right">More</div>
+                <button type="button" class="navbar-toggle menu-icon sb-toggle-right" title="More">
+                <span class="sr-only">Toggle navigation</span>
+                <span class="icon-bar before"></span>
+                <span class="icon-bar main"></span>
+                <span class="icon-bar after"></span>
+                </button>
+            </div>
+            <!-- // .navbar-inner -->
+        </div>
+
+        <!-- ============================ Header & Logo bar =========================== -->
 
 
-<link rel="stylesheet" href="/fancybox/jquery.fancybox.css" media="screen" type="text/css">
-<script src="/fancybox/jquery.fancybox.pack.js"></script>
+      <!-- ============================ Hero Image =========================== -->
 
+<section id="hero" class="scrollme">
+    <div class="container-fluid element-img" style="background: url(/img/bg_img.jpg) no-repeat center center fixed;background-size: cover">
+        <div class="row">
+            <div class="col-xs-12 col-sm-8 col-sm-offset-2 col-md-8 col-md-offset-2 vertical-align cover boost text-center">
+                <div class="center-me animateme" data-when="exit" data-from="0" data-to="0.6" data-opacity="0" data-translatey="100">
+                    <div>
+                        
+                        <h2>iOS Dev medium & Front End junior.</h2>
+                        <p></p>
+                        
+                        <h2></h2>
+                        <p>Turtle.</p>
+                        
 
-<script src="/js/script.js"></script>
-  </div>
+                    </div>
+                </div>
+            </div>
+            <!-- // .col-md-12 -->
+        </div>
+        <div class="herofade beige-dk"></div>
+    </div>
+</section>
+
+<!-- Height spacing helper -->
+<div class="heightblock"></div>
+<!-- // End height spacing helper -->
+
+<!-- ============================ END Hero Image =========================== -->
+<!-- ============================ Content =========================== -->
+
+<section id="intro">
+    <div class="container">
+        
+        <div class="row">
+            <div class="col-md-8 col-md-offset-2 opening-statement">
+                <div class="col-md-4">
+                    <h3><a href="/2016/11/14/单例猛如虎，请小心使用/">单例猛如虎，请小心使用</a></h3>
+                    <span>
+                        <span class="post-meta">
+      <time datetime="2016-11-14T01:42:38.000Z" itemprop="datePublished">
+          2016-11-14
+      </time>
+    
+</span>
+                    </span>
+                </div>
+                <div class="col-md-8">
+                    <p>
+                      
+                        单例模式是一个在iOS里面备受使用的设计模式。但是我们在尽情使用它的时候，一定要注意到它其实也有很多隐含的问题。其实这篇文章也相当于看了objcio上的避免滥用单例的一篇总结。结合自己最近开发的心得，来讲一下单例的一些利与弊吧。
+创建方式首先单例最原始的创建方式就是
+static sharedInstance = nil;@implementation Singleton+(instancetype)sharedInstance {  
+                      
+                    </p>
+                    
+                    <p class="pull-right readMore">
+                        <a href="/2016/11/14/单例猛如虎，请小心使用/">Read More...</a>
+                    </p>
+                    
+                </div>
+                <div class="clearfix"></div>
+                <hr class="nogutter">
+            </div>
+        </div>
+        
+        <nav class="pagination" role="pagination">
+          
+          
+        </nav>
+    </div>
+</section>
+<section id="statement">
+    <div class="container text-center wow fadeInUp" data-wow-delay="0.5s">
+        <div class="row">
+            <p>虽然还没想好写点什么，但是总觉得这里放句话比较和谐。</p>
+        </div>
+    </div>
+</section>
+<!-- ============================ END Content =========================== -->
+
+      
+<!-- ============================ Footer =========================== -->
+
+<footer>
+    <div class="container">
+            <div class="copy">
+                <p>
+                    &copy; 2014<script>new Date().getFullYear()>2010&&document.write("-"+new Date().getFullYear());</script>, Content By Turtle. All Rights Reserved.
+                </p>
+                <p>Theme By <a href="//go.kieran.top" style="color: #767D84">Kieran</a></p>
+            </div>
+            <div class="social">
+                <ul>
+                    
+                    <li><a href="https://github.com/" title="Github" target="_blank"><i class="icon-github"></i></a>&nbsp;</li>
+                    
+                    
+                    <li><a href="https://twitter.com/" title="Twitter" target="_blank"><i class="icon-twitter"></i></a>&nbsp;</li>
+                    
+                    
+                    <li><a href="https://www.facebook.com/" title="Facebook" target="_blank"><i class="icon-facebook"></i></a>&nbsp;</li>
+                    
+                    
+                    <li><a href="https://google.com/" title="Google-Plus" target="_blank"><i class="icon-google-plus"></i></a>&nbsp;</li>
+                    
+                    
+                    <li><a href="http://weibo.com/" title="Sina-Weibo" target="_blank"><i class="icon-sina-weibo"></i></a>&nbsp;</li>
+                    
+                </ul>
+            </div>
+            <div class="clearfix"> </div>
+        </div>
+</footer>
+
+<!-- ============================ END Footer =========================== -->
+      <!-- Load our scripts -->
+        
+<!-- Resizable 'on-demand' full-height hero -->
+<script type="text/javascript">
+    
+    var resizeHero = function () {
+        var hero = $(".cover,.heightblock"),
+            window1 = $(window);
+        hero.css({
+            "height": window1.height()
+        });
+    };
+    
+    resizeHero();
+    
+    $(window).resize(function () {
+        resizeHero();
+    });
+</script>
+<script src="/js/plugins.min.js"></script><!-- Bootstrap core and concatenated plugins always load here -->
+<script src="/js/jquery.flexslider-min.js"></script><!-- Flexslider plugin -->
+<script src="/js/scripts.js"></script><!-- Theme scripts -->
+
+<!-- Initiate flexslider plugin -->
+<script type="text/javascript">
+    $(document).ready(function($) {
+      $('.flexslider').flexslider({
+        animation: "fade",
+        prevText: "",
+        nextText: "",
+        directionNav: true
+      });
+    });
+</script>
+
 </body>
 </html>
