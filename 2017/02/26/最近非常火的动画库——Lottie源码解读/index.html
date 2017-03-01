@@ -17,7 +17,7 @@
 <!--<![endif]-->
 
 <head>
-  <title>Archives | Turtle的技术世界</title>
+  <title>最近非常火的动画库——Lottie源码解读 | Turtle的技术世界</title>
   <!-- Meta data -->
     <meta http-equiv="Content-Type" content="text/html" charset="UTF-8" >
     <meta http-equiv="X-UA-Compatible" content="IE=edge"/>
@@ -84,7 +84,7 @@
 </head>
 
 <!--
-<body class="home-template">
+<body class="post-template">
 -->
 <body id="index" class="lightnav animsition">
 
@@ -178,96 +178,72 @@
         <!-- ============================ Header & Logo bar =========================== -->
 
 
-      <!-- ============================ Hero Image =========================== -->
-
-<section id="hero" class="scrollme">
-    <div class="container-fluid element-img" style="background: url(/img/superman.jpg) no-repeat center center fixed;background-size: cover">
-        <div class="row">
-            <div class="col-xs-12 col-sm-8 col-sm-offset-2 col-md-8 col-md-offset-2 vertical-align cover boost text-center">
-                <div class="center-me animateme" data-when="exit" data-from="0" data-to="0.6" data-opacity="0" data-translatey="100">
-                    <div>
-                        
-                        <h2>iOS Dev medium & Front End junior.</h2>
-                        <p></p>
-                        
-                        <h2></h2>
-                        <p>Turtle.</p>
-                        
-
-                    </div>
-                </div>
-            </div>
-            <!-- // .col-md-12 -->
-        </div>
-        <div class="herofade beige-dk"></div>
-    </div>
-</section>
-
-<!-- Height spacing helper -->
-<div class="heightblock"></div>
-<!-- // End height spacing helper -->
-
-<!-- ============================ END Hero Image =========================== -->
-
-
-
-
-<section id="services">
+      
+<section id="intro">
     <div class="container">
-        <div class="row">
-            <div class="col-md-10 col-md-offset-1">
-                <div class="row boxes">
-                    
-                    
-                        
-                        
-                        <div class="col-xs-12 col-sm-3 col-md-3 col-lg-3 wow fadeInUp" data-wow-delay="0.3s">
-                            
-                              <h4 class="title"><a href="/2017/02/26/最近非常火的动画库——Lottie源码解读/">最近非常火的动画库——Lottie源码解读</a></h4>
-                            
-                            <p><time datetime="2017-02-26T09:39:59.000Z"><a href="/2017/02/26/最近非常火的动画库——Lottie源码解读/">2017-02-26</a></time></p>
-                        </div>
-                    
-                        
-                        
-                        <div class="col-xs-12 col-sm-3 col-md-3 col-lg-3 wow fadeInUp" data-wow-delay="0.3s">
-                            
-                              <h4 class="title"><a href="/2016/12/07/IBOutlet为什么默认是weak的？到底应该设置成strong还是weak？/">IBOutlet为什么默认是weak的？到底应该设置成strong还是weak？</a></h4>
-                            
-                            <p><time datetime="2016-12-07T03:50:59.000Z"><a href="/2016/12/07/IBOutlet为什么默认是weak的？到底应该设置成strong还是weak？/">2016-12-07</a></time></p>
-                        </div>
-                    
-                        
-                        
-                        <div class="col-xs-12 col-sm-3 col-md-3 col-lg-3 wow fadeInUp" data-wow-delay="0.3s">
-                            
-                              <h4 class="title"><a href="/2016/10/21/单例猛如虎，请小心使用/">单例猛如虎，请小心使用</a></h4>
-                            
-                            <p><time datetime="2016-10-21T03:48:38.000Z"><a href="/2016/10/21/单例猛如虎，请小心使用/">2016-10-21</a></time></p>
-                        </div>
-                    
-                        
-                        
-                        <div class="col-xs-12 col-sm-3 col-md-3 col-lg-3 wow fadeInUp" data-wow-delay="0.3s">
-                            
-                              <h4 class="title"><a href="/2016/09/28/用-package、-public、-private、-protected关键字改写extension里ivar的访问权限/">用@package、@public、@private、@protected关键字改写extension里ivar的访问权限</a></h4>
-                            
-                            <p><time datetime="2016-09-28T06:11:33.000Z"><a href="/2016/09/28/用-package、-public、-private、-protected关键字改写extension里ivar的访问权限/">2016-09-28</a></time></p>
-                        </div>
-                    
-                </div>
-            </div>    
+        <div class="row col-md-offset-2">
+            <div class="col-md-8">
+    			<span class="post-meta">
+      <time datetime="2017-02-26T09:39:59.000Z" itemprop="datePublished">
+          2017-02-26
+      </time>
+    
+</span>
+                <h1>最近非常火的动画库——Lottie源码解读</h1>
+            </div>
         </div>
-    </div>
-</section> 
+        <div class="col-md-8 col-md-offset-2">
+      		<p>Yep，finally，eventually，迎来了我的第一篇源码解读类的文章。相比之前粗略看过的ASDK，Lottie可谓是<strong>对开发者来说十分之不友好</strong>——因为几乎没有注释，本文作为自己的学习记录，也给大家参考。</p>
+<p>##从Lottie的官方Demo讲起<br>Lottie的<a href="https://github.com/airbnb/lottie-ios" target="_blank" rel="external">官方Demo</a>的一开始是一个很酷炫的header，以及一个只有三行的tableView：<br><img src="/images/Lottie1.gif" alt=""><br>从每一行里点进去就发现第二个是一个打字相关的动画（显然作者把A-Z的字母显示都用AfterEffects做了一套动画用在了这里），第三行则是一个页面切换的动画。第一行里则是一个让你浏览整个demo里用到的动画的view——这里的动画甚至不是播放的，而是可以自己拖动进度条来带动变化。在第一第二行对应的demo里着重用到了lottie里的一个类——LOTAnimationView来显示动画，而在Animated Transition Demo中则是着重使用LOTAnimationTransitionController，跳到LOTAnimationTransitionController里看一看，原来这个controller不过是一个实现了<uiviewcontrolleranimatedtransitioning>协议，结合LOTAnimationView来实现页面动画切换的一个类而已。<br>所以，非常明显，Lottie始于LOTAnimationView。<br>在我们开始进一步地阅读Lottie的源码之前，我们必须得搞明白Lottie总的来说干了什么，还有我写这篇文章的目的是什么。首先Lottie的作用就是你输入一个由AE制作的动画再由其插件bodymovin转成的JSON，然后Lottie就将里面的动画添加到LOTAnimationView之上并返还给你。<br><img src="/images/Lottie主线.png" alt=""><br>都说阅读源码就像拼图，一块块的找到缺失的拼图块，最后把拼图完成，你也就读懂了这个源码，而这幅示意图就是拼图的主线。所以现在我们知道，Lottie干了两件事——接收JSON文件解析获得数据，并把数据用来生成动画并最后返回给你一个可视的view。而这篇文章的目的，是要告诉你它是怎么获得数据的，获得了哪些数据，怎么封装的，还有整个项目的结构以及它用到的核心技术。Lottie生成动画的核心技术是使用了苹果的动画库Core Animation，但是由于我才疏学浅，对Core Animation了解不深，所以也是边查边阅读的源码，如有理解上的错误还望指出纠正。（然而目前我的博客还没有评论功能，我会尽快加上的！）<br>那么，正文开始。哦还有，本文解析的是Lottie-iOS，如果想看别的版本的解析，请移步别处，并且Lottie里关于Mac OS的部分，只会有少量的解释甚至不解释。</uiviewcontrolleranimatedtransitioning></p>
+<p>##Lottie之源——LOTAnimationView<br>打开LOTAnimationView.m，看到类方法：<br><code>+ (instancetype)animationNamed:(NSString *)animationName</code><br>这毕竟是一个专门用来初始化的工厂方法，很好用来作为开始，代码也很好懂，animationName就是JSON文件对应的名字，方法最开始先取出文件的名字，然后从LOTAnimationCache里取出LOTComposition的缓存，先将后者放到一边，结合<a href="https://github.com/airbnb/lottie-ios" target="_blank" rel="external">官方文档</a>所提到的<strong>LRU缓存策略</strong>，我们来讲讲LOTAnimationCache。  </p>
+<p>##LRU（Least Recently Used）——LOTAnimationCache<br>打开LOTAnimationCache.h，可以看到这是一个单例，还有简单的存取方法。下移一格，来到LOTAnimationCache.m，我们可以看到它只有两个ivar，一个<code>NSMutableDictionary *animationsCache_</code>和一个<code>NSMutableArray *lruOrderArray_</code>。如果你学过操作系统，你就知道<a href="https://en.wikipedia.org/wiki/Cache_replacement_policies#LRU" target="_blank" rel="external">LRU算法</a>是一种淘汰最近最少使用的项目的算法。而LOTAnimationCache的字典用来存放&lt;动画名，LOTComposition&gt;的数据，而lruOrderArray_则是维持了一个lru序列，里面全是动画名。  </p>
+<pre>
+<code>
+- (void)addAnimation:(LOTComposition *)animation forKey:(NSString *)key {
+  if (lruOrderArray_.count >= kLOTCacheSize) {
+    NSString *oldKey = lruOrderArray_[0];
+    [animationsCache_ removeObjectForKey:oldKey];
+    [lruOrderArray_ removeObject:oldKey];
+  }
+  [lruOrderArray_ removeObject:key];
+  [lruOrderArray_ addObject:key];
+  [animationsCache_ setObject:animation forKey:key];
+}
+</code>
+</pre>
 
-<section id="statement">
-    <div class="container text-center wow fadeInUp" data-wow-delay="0.5s">
-        <div class="row">
-            <p>虽然还没想好写点什么，但是总觉得这里放句话比较和谐。</p>
+
+
+            <div class="clearfix"></div>
+            <hr class="nogutter">
         </div>
+        <nav class="pagination" role="pagination">
+    
+    
+    <a class="pull-right" href="/2016/12/07/IBOutlet为什么默认是weak的？到底应该设置成strong还是weak？/">
+        IBOutlet为什么默认是weak的？到底应该设置成strong还是weak？ →
+    </a>
+    
+</nav>
+
+        <div class="duoshuo">
+<div class="ds-thread" data-thread-key="2017/02/26/最近非常火的动画库——Lottie源码解读/" data-title="最近非常火的动画库——Lottie源码解读" data-url="http://yoursite.com/2017/02/26/最近非常火的动画库——Lottie源码解读/"></div>
+<script type="text/javascript">
+var duoshuoQuery = {short_name:"duoshuo_name"};
+(function() {
+	var ds = document.createElement('script');
+	ds.type = 'text/javascript';ds.async = true;
+	ds.src = (document.location.protocol == 'https:' ? 'https:' : 'http:') + '//static.duoshuo.com/embed.js';
+	ds.charset = 'UTF-8';
+	(document.getElementsByTagName('head')[0] 
+	 || document.getElementsByTagName('body')[0]).appendChild(ds);
+})();
+</script>
+</div>
     </div>
 </section>
+
+
       
 <!-- ============================ Footer =========================== -->
 
