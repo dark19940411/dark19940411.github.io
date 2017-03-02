@@ -44,10 +44,10 @@ figure.highlight {
   padding: 7px 15px 7px 10px;
   border-radius: 2px;
   text-shadow: 0 0 1px #fff;
-  line-height: 1.6;
+  line-height: 2;
   overflow: auto;
   position: relative;
-  font-size: 1em;
+  font-size: 1.5em;
   font-family: font-mono;
 }
 figure.highlight figcaption {
@@ -87,7 +87,7 @@ pre .pi,
 pre .lisp .string,
 pre .javadoc {
   color: #93a1a1;
-  font-style: italic;
+  font-style: Menlo, "Source Code Pro", Monaco, Consolas, Consolas, monospace;
 }
 pre .keyword,
 pre .winutils,

@@ -33,9 +33,9 @@
     <link rel="alternate" href="/atom.xml" title="Turtle的技术世界" type="application/atom+xml">
     <link rel="stylesheet" href="/css/all.css" media="screen" type="text/css">
 	
-    <link rel="stylesheet" href="/highlightjs/vs.css" type="text/css">
+    <link rel="stylesheet" href="/highlightjs/xcode.css" type="text/css">
     
-    
+
 
     <!-- Custom stylesheet, (add custom styles here, always load last) -->
     <!-- Load our stylesheet for IE8 -->
@@ -44,8 +44,8 @@
     <![endif]-->
 
     <!-- Google Webfonts (Monserrat 400/700, Open Sans 400/600) -->
-    <link href='//fonts.useso.com/css?family=Montserrat:400,700' rel='stylesheet' type='text/css'>
-    <link href='//fonts.useso.com/css?family=Open+Sans:400,600' rel='stylesheet' type='text/css'>
+    <!-- <link href='//fonts.useso.com/css?family=Montserrat:400,700' rel='stylesheet' type='text/css'>
+    <link href='//fonts.useso.com/css?family=Open+Sans:400,600' rel='stylesheet' type='text/css'> -->
 
     <!-- Load our fonts individually if IE8+, to avoid faux bold & italic rendering -->
     <!--[if IE]>
@@ -144,19 +144,13 @@
                             <li><a href="/" class="animsition-link">Turtle的技术世界</a></li>
                             <li class="nolink"><span>Always </span>Creative.</li>
                             
-                            <li><a href="https://github.com/" title="Github" target="_blank"><i class="icon-github"></i></a></li>
+                            <li><a href="https://github.com/dark19940411" title="Github" target="_blank"><i class="icon-github"></i></a></li>
                             
                             
-                            <li><a href="https://twitter.com/" title="Twitter" target="_blank"><i class="icon-twitter"></i></a></li>
                             
                             
-                            <li><a href="https://www.facebook.com/" title="Facebook" target="_blank"><i class="icon-facebook"></i></a></li>
                             
-                            
-                            <li><a href="https://google.com/" title="Google-Plus" target="_blank"><i class="icon-google-plus"></i></a></li>
-                            
-                            
-                            <li><a href="http://weibo.com/" title="Sina-Weibo" target="_blank"><i class="icon-sina-weibo"></i></a></li>
+                            <li><a href="http://weibo.com/1950154683/profile?rightmod=1&wvr=6&mod=personinfo&is_all=1" title="Sina-Weibo" target="_blank"><i class="icon-sina-weibo"></i></a></li>
                             
                             <li class="nolink"><span>Welcome!</span></li>
                         </ul>
@@ -194,39 +188,17 @@
         </div>
         <div class="col-md-8 col-md-offset-2">
       		<p>单例模式是一个在iOS里面备受使用的设计模式。但是我们在尽情使用它的时候，一定要注意到它其实也有很多隐含的问题。<br>其实这篇文章也相当于看了objcio上的<a href="https://objccn.io/issue-13-2/" target="_blank" rel="external">避免滥用单例</a>的一篇总结。<br>结合自己最近开发的心得，来讲一下单例的一些利与弊吧。</p>
-<h2 id="创建方式"><a href="#创建方式" class="headerlink" title="创建方式"></a>创建方式</h2><p>首先单例最原始的创建方式就是</p>
-<p><pre><br><code><br>static sharedInstance = nil;<br>@implementation Singleton<br>+(instancetype)sharedInstance {<br>    if(sharedInstance) {<br>        sharedInstance = [[Singleton alloc] init];<br>    }<br>    return sharedInstance;<br>}<br>@end<br></code><br></pre><br>但是这种创建方式在多线程环境下会出问题，假如两条线程同时执行到if的话，就会各自获取到两个实例了。为了解决这个问题，我们可以想到上锁，于是有了下面这个版本：</p>
-<p><pre><br><code><br>static sharedInstance = nil;<br>@implementation Singleton<br>+(instancetype)sharedInstance {<br>    @synchronized(self)<br>        if(sharedInstance) {<br>            sharedInstance = [[Singleton alloc] init];<br>        }<br>    }<br>    return sharedInstance;<br>}<br>@end<br></code><br></pre><br>但是因为我们都知道，访问一个锁的开销很大，考虑到性能的问题，iOS在最后给我们推出了一个GCD上的API:<br><code>dispatch_once(dispatch_once_t *predicate,
+<h2 id="创建方式"><a href="#创建方式" class="headerlink" title="创建方式"></a>创建方式</h2><p>首先单例最原始的创建方式就是<br><figure class="highlight objc"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">static</span> sharedInstance = <span class="literal">nil</span>;</div><div class="line"><span class="class"><span class="keyword">@implementation</span> <span class="title">Singleton</span></span></div><div class="line">+(<span class="keyword">instancetype</span>)sharedInstance &#123;</div><div class="line">	<span class="keyword">if</span>(sharedInstance) &#123;</div><div class="line">		sharedInstance = [[Singleton alloc] init];</div><div class="line">	&#125;</div><div class="line">	<span class="keyword">return</span> sharedInstance;</div><div class="line">&#125;</div><div class="line"><span class="keyword">@end</span></div></pre></td></tr></table></figure></p>
+<p>但是这种创建方式在多线程环境下会出问题，假如两条线程同时执行到if的话，就会各自获取到两个实例了。为了解决这个问题，我们可以想到上锁，于是有了下面这个版本：</p>
+<figure class="highlight objc"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">static</span> sharedInstance = <span class="literal">nil</span>;</div><div class="line"><span class="class"><span class="keyword">@implementation</span> <span class="title">Singleton</span></span></div><div class="line">+(<span class="keyword">instancetype</span>)sharedInstance &#123;</div><div class="line">	<span class="keyword">@synchronized</span>(<span class="keyword">self</span>)</div><div class="line">		<span class="keyword">if</span>(sharedInstance) &#123;</div><div class="line">			sharedInstance = [[Singleton alloc] init];</div><div class="line">		&#125;</div><div class="line">	&#125;</div><div class="line">	<span class="keyword">return</span> sharedInstance;</div><div class="line">&#125;</div><div class="line"><span class="keyword">@end</span></div></pre></td></tr></table></figure>
+<p>但是因为我们都知道，访问一个锁的开销很大，考虑到性能的问题，iOS在最后给我们推出了一个GCD上的API:<br><code>dispatch_once(dispatch_once_t *predicate,
         DISPATCH_NOESCAPE dispatch_block_t block)</code><br>这个api确保了传入的block里的内容<strong>在程序运行期间只执行一次</strong>。运用这一点，我们可以很方便的写出单例模式的构建方法。</p>
-<p><pre><code><br>static sharedInstance = nil;<br>@implementation Singleton<br>+(instancetype)sharedInstance {<br>    static dispatch_once_t onceToken;<br>    dispatch_once(&amp;onceToken, ^{<br>        sharedInstance = [[Singleton alloc] init];<br>    });<br>    return sharedInstance;<br>}<br>@end<br></code></pre><br>没有异步问题，没有锁的访问，然后怎么样？完美。<br>但是现在，我们还有一个棘手的问题需要解决，我们需要屏蔽掉单例的其他初始化方式，因为我们总不想我们写好的一个单例最后还可以通过<code>alloc] init</code>的方式被初始化吧？下面我将介绍两种办法，皆是参考<a href="http://www.jianshu.com/p/7486ebfcd93b" target="_blank" rel="external">这篇文章</a>的。</p>
-<h3 id="第一种——将init用断言或者throw-exception的方式给屏蔽了"><a href="#第一种——将init用断言或者throw-exception的方式给屏蔽了" class="headerlink" title="第一种——将init用断言或者throw exception的方式给屏蔽了"></a>第一种——将init用断言或者throw exception的方式给屏蔽了</h3><p>上代码：</p>
-<p><pre><br><code><br>static sharedInstance = nil;<br>@implementation Singleton</code></pre></p>
-<pre><code>+(instancetype)sharedInstance {    //公开的接口
-    static dispatch_once_t onceToken;
-    dispatch_once(&amp;onceToken, ^{
-        sharedInstance = [[Singleton alloc] initPrivate];
-    });
-    return sharedInstance;
-}  
-
--(instancetype)init {//禁止掉公开的init方法
-    @throw [NSException exceptionWithName:@&quot;这个是个单例&quot;
-                                   reason:@&quot;应该这样调用 [Singleton sharedInstance]&quot;
-                                 userInfo:nil];
-    return nil;
-}  
-
--(instancetype)initPrivate {//写一个私有的用来真正初始化的方法
-    self  = [super init];
-    if(self){
-        //做一些真正初始化的事。
-    }
-    return self;
-}
-@end
-</code></pre><p><br><br>第一种，就是简单粗暴的禁止外部调用[[Singleton alloc] init]来产生额外的实例，这也是我最喜欢的一种方式，原因等介绍完第二种方法以后再说。</p>
-<h3 id="第二种——重写-allocWithZone-和-copyWithZone方法确保其它创建方式无法创建新的实例"><a href="#第二种——重写-allocWithZone-和-copyWithZone方法确保其它创建方式无法创建新的实例" class="headerlink" title="第二种——重写+allocWithZone: 和-copyWithZone方法确保其它创建方式无法创建新的实例"></a>第二种——重写+allocWithZone: 和-copyWithZone方法确保其它创建方式无法创建新的实例</h3><p>上代码：</p>
-<p><pre><br><code><br>static Singleton * _instance;<br>@implementation Singleton<br>+ (instancetype)sharedInstance {<br>    static dispatch_once_t onceToken;<br>    dispatch_once(&amp;onceToken, ^{<br>        _instance = [[Singleton alloc] init];<br>    });<br>    return _instance;<br>}<br>+ (instancetype)allocWithZone:(struct _NSZone <em>)zone<br>{<br>    static dispatch_once_t onceToken;<br>    dispatch_once(&amp;onceToken, ^{<br>        _instance = [super allocWithZone:zone];<br>    });<br>    return _instance;<br>}<br>- (id)copyWithZone:(NSZone </em>)zone<br>{<br>    return _instance;<br>}<br>@end<br></code><br></pre><br>这样子写确保了外部调用+sharedInstance、alloc-init、-copy三种方法来获取Singleton的实例都会获取到同一个实例。但是我并不喜欢这种创建方式。原因就是第一种写法限制来外部只能通过sharedInstance的方式来获取单例，而第二种可以通过alloc-init的方式来获取实例的话就会和其他非单例类混在一起，尽管它本质是单例，但是你不觉得外表看起来也像是个单例会更好吗？而且这样子写代码也更加清晰。  </p>
+<figure class="highlight objc"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">static</span> sharedInstance = <span class="literal">nil</span>;</div><div class="line"><span class="class"><span class="keyword">@implementation</span> <span class="title">Singleton</span></span></div><div class="line">+(<span class="keyword">instancetype</span>)sharedInstance &#123;</div><div class="line">	<span class="keyword">static</span> <span class="built_in">dispatch_once_t</span> onceToken;</div><div class="line">    <span class="built_in">dispatch_once</span>(&amp;onceToken, ^&#123;</div><div class="line">        sharedInstance = [[Singleton alloc] init];</div><div class="line">    &#125;);</div><div class="line">	<span class="keyword">return</span> sharedInstance;</div><div class="line">&#125;</div><div class="line"><span class="keyword">@end</span></div></pre></td></tr></table></figure>
+<p>没有异步问题，没有锁的访问，然后怎么样？完美。<br>但是现在，我们还有一个棘手的问题需要解决，我们需要屏蔽掉单例的其他初始化方式，因为我们总不想我们写好的一个单例最后还可以通过<code>alloc] init</code>的方式被初始化吧？下面我将介绍两种办法，皆是参考<a href="http://www.jianshu.com/p/7486ebfcd93b" target="_blank" rel="external">这篇文章</a>的。</p>
+<h3 id="第一种——将init用断言或者throw-exception的方式给屏蔽了"><a href="#第一种——将init用断言或者throw-exception的方式给屏蔽了" class="headerlink" title="第一种——将init用断言或者throw exception的方式给屏蔽了"></a>第一种——将init用断言或者throw exception的方式给屏蔽了</h3><p>上代码：<br><figure class="highlight objc"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">static</span> sharedInstance = <span class="literal">nil</span>;</div><div class="line"><span class="class"><span class="keyword">@implementation</span> <span class="title">Singleton</span></span></div><div class="line"></div><div class="line">	+(<span class="keyword">instancetype</span>)sharedInstance &#123;    <span class="comment">//公开的接口</span></div><div class="line">		<span class="keyword">static</span> <span class="built_in">dispatch_once_t</span> onceToken;</div><div class="line">	    <span class="built_in">dispatch_once</span>(&amp;onceToken, ^&#123;</div><div class="line">	        sharedInstance = [[Singleton alloc] initPrivate];</div><div class="line">	    &#125;);</div><div class="line">		<span class="keyword">return</span> sharedInstance;</div><div class="line">	&#125;  </div><div class="line"></div><div class="line">	-(<span class="keyword">instancetype</span>)init &#123;<span class="comment">//禁止掉公开的init方法</span></div><div class="line">	    <span class="keyword">@throw</span> [<span class="built_in">NSException</span> exceptionWithName:<span class="string">@"这个是个单例"</span></div><div class="line">	                                   reason:<span class="string">@"应该这样调用 [Singleton sharedInstance]"</span></div><div class="line">	                                 userInfo:<span class="literal">nil</span>];</div><div class="line">	    <span class="keyword">return</span> <span class="literal">nil</span>;</div><div class="line">	&#125;  </div><div class="line"></div><div class="line">	-(<span class="keyword">instancetype</span>)initPrivate &#123;<span class="comment">//写一个私有的用来真正初始化的方法</span></div><div class="line">	    <span class="keyword">self</span>  = [<span class="keyword">super</span> init];</div><div class="line">	    <span class="keyword">if</span>(<span class="keyword">self</span>)&#123;</div><div class="line">	    	<span class="comment">//做一些真正初始化的事。</span></div><div class="line">	    &#125;</div><div class="line">	    <span class="keyword">return</span> <span class="keyword">self</span>;</div><div class="line">	&#125;</div><div class="line">	<span class="keyword">@end</span></div></pre></td></tr></table></figure></p>
+<p>第一种，就是简单粗暴的禁止外部调用[[Singleton alloc] init]来产生额外的实例，这也是我最喜欢的一种方式，原因等介绍完第二种方法以后再说。</p>
+<h3 id="第二种——重写-allocWithZone-和-copyWithZone方法确保其它创建方式无法创建新的实例"><a href="#第二种——重写-allocWithZone-和-copyWithZone方法确保其它创建方式无法创建新的实例" class="headerlink" title="第二种——重写+allocWithZone: 和-copyWithZone方法确保其它创建方式无法创建新的实例"></a>第二种——重写+allocWithZone: 和-copyWithZone方法确保其它创建方式无法创建新的实例</h3><p>上代码：<br><figure class="highlight objc"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">static</span> Singleton * _instance;</div><div class="line"><span class="class"><span class="keyword">@implementation</span> <span class="title">Singleton</span></span></div><div class="line">+ (<span class="keyword">instancetype</span>)sharedInstance &#123;</div><div class="line">    <span class="keyword">static</span> <span class="built_in">dispatch_once_t</span> onceToken;</div><div class="line">    <span class="built_in">dispatch_once</span>(&amp;onceToken, ^&#123;</div><div class="line">        _instance = [[Singleton alloc] init];</div><div class="line">    &#125;);</div><div class="line">    <span class="keyword">return</span> _instance;</div><div class="line">&#125;</div><div class="line">+ (<span class="keyword">instancetype</span>)allocWithZone:(<span class="keyword">struct</span> _NSZone *)zone</div><div class="line">&#123;</div><div class="line">    <span class="keyword">static</span> <span class="built_in">dispatch_once_t</span> onceToken;</div><div class="line">    <span class="built_in">dispatch_once</span>(&amp;onceToken, ^&#123;</div><div class="line">        _instance = [<span class="keyword">super</span> allocWithZone:zone];</div><div class="line">    &#125;);</div><div class="line">    <span class="keyword">return</span> _instance;</div><div class="line">&#125;</div><div class="line">- (<span class="keyword">id</span>)copyWithZone:(<span class="built_in">NSZone</span> *)zone</div><div class="line">&#123;</div><div class="line">    <span class="keyword">return</span> _instance;</div><div class="line">&#125;</div><div class="line"><span class="keyword">@end</span></div></pre></td></tr></table></figure></p>
+<p>这样子写确保了外部调用+sharedInstance、alloc-init、-copy三种方法来获取Singleton的实例都会获取到同一个实例。但是我并不喜欢这种创建方式。原因就是第一种写法限制来外部只能通过sharedInstance的方式来获取单例，而第二种可以通过alloc-init的方式来获取实例的话就会和其他非单例类混在一起，尽管它本质是单例，但是你不觉得外表看起来也像是个单例会更好吗？而且这样子写代码也更加清晰。  </p>
 <h2 id="优点"><a href="#优点" class="headerlink" title="优点"></a>优点</h2><p>总结为两点：</p>
 <ul>
 <li>因为限制了实例数量，可以节省内存空间。</li>
@@ -291,19 +263,13 @@ var duoshuoQuery = {short_name:"duoshuo_name"};
             <div class="social">
                 <ul>
                     
-                    <li><a href="https://github.com/" title="Github" target="_blank"><i class="icon-github"></i></a>&nbsp;</li>
+                    <li><a href="https://github.com/dark19940411" title="Github" target="_blank"><i class="icon-github"></i></a>&nbsp;</li>
                     
                     
-                    <li><a href="https://twitter.com/" title="Twitter" target="_blank"><i class="icon-twitter"></i></a>&nbsp;</li>
                     
                     
-                    <li><a href="https://www.facebook.com/" title="Facebook" target="_blank"><i class="icon-facebook"></i></a>&nbsp;</li>
                     
-                    
-                    <li><a href="https://google.com/" title="Google-Plus" target="_blank"><i class="icon-google-plus"></i></a>&nbsp;</li>
-                    
-                    
-                    <li><a href="http://weibo.com/" title="Sina-Weibo" target="_blank"><i class="icon-sina-weibo"></i></a>&nbsp;</li>
+                    <li><a href="http://weibo.com/1950154683/profile?rightmod=1&wvr=6&mod=personinfo&is_all=1" title="Sina-Weibo" target="_blank"><i class="icon-sina-weibo"></i></a>&nbsp;</li>
                     
                 </ul>
             </div>
