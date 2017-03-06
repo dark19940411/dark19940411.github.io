@@ -190,7 +190,7 @@
       		<p>Yep，finally，eventually，迎来了我的第一篇源码解读类的文章。相比之前粗略看过的ASDK，Lottie可谓是<strong>对开发者来说十分之不友好</strong>——因为几乎没有注释，本文作为自己的学习记录，也给大家参考。</p>
 <h3 id="从Lottie的官方Demo讲起"><a href="#从Lottie的官方Demo讲起" class="headerlink" title="从Lottie的官方Demo讲起"></a>从Lottie的官方Demo讲起</h3><p>Lottie的<a href="https://github.com/airbnb/lottie-ios" target="_blank" rel="external">官方Demo</a>的一开始是一个很酷炫的header，以及一个只有三行的tableView：<br><img src="/images/Lottie1.gif" alt=""><br>从每一行里点进去就发现第二个是一个打字相关的动画（显然作者把A-Z的字母显示都用AfterEffects做了一套动画用在了这里），第三行则是一个页面切换的动画。第一行里则是一个让你浏览整个demo里用到的动画的view——这里的动画甚至不是播放的，而是可以自己拖动进度条来带动变化。在第一第二行对应的demo里着重用到了lottie里的一个类——LOTAnimationView来显示动画，而在Animated Transition Demo中则是着重使用LOTAnimationTransitionController，跳到LOTAnimationTransitionController里看一看，原来这个controller不过是一个实现了<code>&lt;UIViewControllerAnimatedTransitioning&gt;</code>协议，结合LOTAnimationView来实现页面动画切换的一个类而已。  </p>
 <p>所以，非常明显，Lottie始于LOTAnimationView。  </p>
-<p>在我们开始进一步地阅读Lottie的源码之前，我们必须得搞明白Lottie总的来说干了什么，还有我写这篇文章的目的是什么。首先Lottie的作用就是你输入一个由AE制作的动画再由其插件bodymovin转成的JSON，然后Lottie就将里面的动画添加到LOTAnimationView之上并返还给你。<br><img src="/images/Lottie主线.png" alt=""><br>都说阅读源码就像拼图，一块块的找到缺失的拼图块，最后把拼图完成，你也就读懂了这个源码，而这幅示意图就是拼图的主线。所以现在我们知道，Lottie干了两件事——接收JSON文件解析获得数据，并把数据用来生成动画并最后返回给你一个可视的view。而这篇文章的目的，是要告诉你它是怎么获得数据的，获得了哪些数据，怎么封装的，还有整个项目的结构以及它用到的核心技术。Lottie生成动画的核心技术是使用了苹果的动画库Core Animation，但是由于我才疏学浅，对Core Animation了解不深，所以也是边查边阅读的源码，如有理解上的错误还望指出纠正。（然而目前我的博客还没有评论功能，我会尽快加上的！） </p>
+<p>在我们开始进一步地阅读Lottie的源码之前，我们必须得搞明白Lottie总的来说干了什么，还有我写这篇文章的目的是什么。首先Lottie的作用就是你输入一个由AE制作的动画再由其插件bodymovin转成的JSON，然后Lottie就将里面的动画添加到LOTAnimationView之上并返还给你。<br><img src="/images/Lottie主线.png" alt=""><br>都说阅读源码就像拼图，一块块的找到缺失的拼图块，最后把拼图完成，你也就读懂了这个源码，而这幅示意图就是拼图的主线。所以现在我们知道，Lottie干了两件事——接收JSON文件解析获得数据，并把数据用来生成动画并最后返回给你一个可视的view。而这篇文章的目的，是要告诉你它是怎么获得数据的，获得了哪些数据，怎么封装的，还有整个项目的结构以及它用到的核心技术。Lottie生成动画的核心技术是使用了苹果的动画库Core Animation，但是由于我才疏学浅，对Core Animation了解不深，所以也是边查边阅读的源码，如有理解上的错误还望指出纠正。</p>
 <p>那么，正文开始。哦还有，本文解析的是Lottie-iOS，如果想看别的版本的解析，请移步别处，并且Lottie里关于Mac OS的部分，只会有少量的解释甚至不解释。</p>
 <h3 id="从LOTAnimationView的初始化讲起"><a href="#从LOTAnimationView的初始化讲起" class="headerlink" title="从LOTAnimationView的初始化讲起"></a>从LOTAnimationView的初始化讲起</h3><p>看到源码，我们可以发现LOTAnimationView继承自LOTView，LOTView实际上只是个一个换名的类，对于iOS而言LOTView就是UIView，对于MacOS而言，就是NSView，显然它是为了适配Mac而存在的。<br>打开LOTAnimationView.m，看到类方法：<br><code>+ (instancetype)animationNamed:(NSString *)animationName</code><br>这毕竟是一个专门用来初始化的工厂方法，很好用来作为开始，代码也很好懂，animationName就是JSON文件对应的名字，方法最开始先取出文件的名字，然后从LOTAnimationCache里取出LOTComposition的缓存，先将后者放到一边，结合<a href="https://github.com/airbnb/lottie-ios" target="_blank" rel="external">官方文档</a>所提到的<strong>LRU缓存策略</strong>，我们来讲讲LOTAnimationCache。  </p>
 <h4 id="LRU（Least-Recently-Used）——LOTAnimationCache"><a href="#LRU（Least-Recently-Used）——LOTAnimationCache" class="headerlink" title="LRU（Least Recently Used）——LOTAnimationCache"></a>LRU（Least Recently Used）——LOTAnimationCache</h4><p>打开LOTAnimationCache.h，可以看到这是一个单例，还有简单的存取方法。下移一格，来到LOTAnimationCache.m，我们可以看到它只有两个ivar，一个<code>NSMutableDictionary *animationsCache_</code>和一个<code>NSMutableArray *lruOrderArray_</code>。如果你学过操作系统，你就知道<a href="https://en.wikipedia.org/wiki/Cache_replacement_policies#LRU" target="_blank" rel="external">LRU算法</a>是一种淘汰最近最少使用的项目的算法。而LOTAnimationCache的字典用来存放&lt;动画名，LOTComposition&gt;的数据，而lruOrderArray_则是维持了一个lru序列，里面全是动画名。<br><figure class="highlight objc"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div></pre></td><td class="code"><pre><div class="line">- (<span class="keyword">void</span>)addAnimation:(LOTComposition *)animation forKey:(<span class="built_in">NSString</span> *)key &#123;</div><div class="line">    <span class="keyword">if</span> (lruOrderArray_.count &gt;= <span class="number">50</span>) &#123;</div><div class="line">        <span class="built_in">NSString</span> *oldKey = lruOrderArray_[<span class="number">0</span>];</div><div class="line">        [animationsCache_ removeObjectForKey:oldKey];</div><div class="line">        [lruOrderArray_ removeObject:oldKey];</div><div class="line">    &#125;</div><div class="line">    [lruOrderArray_ removeObject:key];</div><div class="line">    [lruOrderArray_ addObject:key];</div><div class="line">    [animationsCache_ setObject:animation forKey:key];</div><div class="line">&#125;</div></pre></td></tr></table></figure></p>
@@ -238,16 +238,17 @@
         <div class="duoshuo">
 <div class="ds-thread" data-thread-key="2017/02/26/最近非常火的动画库——Lottie源码解读/" data-title="最近非常火的动画库——Lottie源码解读" data-url="http://yoursite.com/2017/02/26/最近非常火的动画库——Lottie源码解读/"></div>
 <script type="text/javascript">
-var duoshuoQuery = {short_name:"duoshuo_name"};
+var duoshuoQuery = {short_name:"turtle"};
 (function() {
 	var ds = document.createElement('script');
 	ds.type = 'text/javascript';ds.async = true;
 	ds.src = (document.location.protocol == 'https:' ? 'https:' : 'http:') + '//static.duoshuo.com/embed.js';
 	ds.charset = 'UTF-8';
-	(document.getElementsByTagName('head')[0] 
+	(document.getElementsByTagName('head')[0]
 	 || document.getElementsByTagName('body')[0]).appendChild(ds);
 })();
 </script>
+
 </div>
     </div>
 </section>
