@@ -1,0 +1,295 @@
+<!DOCTYPE html>
+<!--[if lte IE 8 ]>
+<html class="ie" xmlns="http://www.w3.org/1999/xhtml" xml:lang="en-US" lang="en-US">
+<![endif]-->
+<!--[if (gte IE 9)|!(IE)]><!-->
+<!--
+***************  *      *     *
+      8          *    *       *
+      8          *  *         *
+      8          **           *
+      8          *  *         *
+      8          *    *       *
+      8          *      *     *
+      8          *        *   ***********    -----Theme By Kieran(http://go.kieran.top)
+-->
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en-US" lang="en-US">
+<!--<![endif]-->
+
+<head>
+  <title>ShareExtension踩坑过程全记录 | Turtle的技术世界</title>
+  <!-- Meta data -->
+    <meta http-equiv="Content-Type" content="text/html" charset="UTF-8" >
+    <meta http-equiv="X-UA-Compatible" content="IE=edge"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="generator" content="Turtle的技术世界">
+    <meta name="author" content="Turtle">
+    <meta name="description" content="iOS中级开发者 & 前端刚入门" />
+    <meta name="keywords" content="" />
+
+    <!-- Favicon, (keep icon in root folder) -->
+    <link rel="Shortcut Icon" href="/img/favicon.ico" type="image/ico">
+
+    <link rel="alternate" href="/atom.xml" title="Turtle的技术世界" type="application/atom+xml">
+    <link rel="stylesheet" href="/css/all.css" media="screen" type="text/css">
+	
+    <link rel="stylesheet" href="/highlightjs/pojoaque.css" type="text/css">
+    
+
+
+    <!-- Custom stylesheet, (add custom styles here, always load last) -->
+    <!-- Load our stylesheet for IE8 -->
+    <!--[if IE 8]>
+    <link rel="stylesheet" type="text/css" href="/css/ie8.css" />
+    <![endif]-->
+
+    <!-- Google Webfonts (Monserrat 400/700, Open Sans 400/600) -->
+    <!-- <link href='//fonts.useso.com/css?family=Montserrat:400,700' rel='stylesheet' type='text/css'>
+    <link href='//fonts.useso.com/css?family=Open+Sans:400,600' rel='stylesheet' type='text/css'> -->
+
+    <!-- Load our fonts individually if IE8+, to avoid faux bold & italic rendering -->
+    <!--[if IE]>
+    <link href='http://fonts.useso.com/css?family=Montserrat:400' rel='stylesheet' type='text/css'>
+    <link href='http://fonts.useso.com/css?family=Montserrat:700' rel='stylesheet' type='text/css'>
+    <link href='http://fonts.useso.com/css?family=Open+Sans:400' rel='stylesheet' type='text/css'>
+    <link href='http://fonts.useso.com/css?family=Open+Sans:600' rel='stylesheet' type='text/css'>
+    <![endif]-->
+
+    <!-- jQuery | Load our jQuery, with an alternative source fallback to a local version if request is unavailable -->
+    <script src="/js/jquery-1.11.1.min.js"></script>
+    <script>window.jQuery || document.write('<script src="js/jquery-1.11.1.min.js"><\/script>')</script>
+
+    <!-- Load these in the <head> for quicker IE8+ load times -->
+    <!-- HTML5 shim and Respond.js IE8 support of HTML5 elements and media queries -->
+    <!--[if lt IE 9]>
+    <script src="/js/html5shiv.min.js"></script>
+    <script src="/js/respond.min.js"></script>
+    <![endif]-->
+
+
+
+
+
+
+
+
+
+
+  
+  
+  
+
+  
+  <style>.col-md-8.col-md-offset-2.opening-statement img{display:none;}</style>
+</head>
+
+<!--
+<body class="post-template">
+-->
+<body id="index" class="lightnav animsition">
+
+      <!-- ============================ Off-canvas navigation =========================== -->
+
+    <div class="sb-slidebar sb-right sb-style-overlay sb-momentum-scrolling">
+        <div class="sb-close" aria-label="Close Menu" aria-hidden="true">
+            <img src="/img/close.png" alt="Close"/>
+        </div>
+        <!-- Lists in Slidebars -->
+        <ul class="sb-menu">
+            <li><a href="/" class="animsition-link" title="Home">Home</a></li>
+            <li><a href="/archives" class="animsition-link" title="archive">archives</a></li>
+            <!-- Dropdown Menu -->
+			 
+            
+            
+            <li>
+                <a class="sb-toggle-submenu">Links<span class="sb-caret"></span></a>
+                <ul class="sb-submenu">
+                    
+                    <li><a href="http://blog.gocy.tech/" class="animsition-link">Gocy</a></li>
+                    
+                </ul>
+            </li>
+            
+        </ul>
+        <!-- Lists in Slidebars -->
+        <ul class="sb-menu secondary">
+            <li><a href="/about.html" class="animsition-link" title="about">About</a></li>
+            <li><a href="/atom.xml" class="animsition-link" title="rss">RSS</a></li>
+        </ul>
+    </div>
+    
+    <!-- ============================ END Off-canvas navigation =========================== -->
+
+    <!-- ============================ #sb-site Main Page Wrapper =========================== -->
+
+    <div id="sb-site">
+        <!-- #sb-site - All page content should be contained within this id, except the off-canvas navigation itself -->
+
+        <!-- ============================ Header & Logo bar =========================== -->
+
+        <div id="navigation" class="navbar navbar-fixed-top">
+            <div class="navbar-inner">
+                <div class="container">
+                    <!-- Nav logo -->
+                    <div class="logo">
+                        <a href="/" title="Logo" class="animsition-link">
+                         <img src="/img/turtle.png" alt="Logo" width="35px;"/> 
+                        </a>
+                    </div>
+                    <!-- // Nav logo -->
+                    <!-- Info-bar -->
+                    <nav>
+                        <ul class="nav">
+                            <li><a href="/" class="animsition-link">Turtle的技术世界</a></li>
+                            <li class="nolink"><span>Always </span>Creative.</li>
+                            
+                            <li><a href="https://github.com/dark19940411" title="Github" target="_blank"><i class="icon-github"></i></a></li>
+                            
+                            
+                            
+                            
+                            
+                            <li><a href="http://weibo.com/1950154683/profile?rightmod=1&wvr=6&mod=personinfo&is_all=1" title="Sina-Weibo" target="_blank"><i class="icon-sina-weibo"></i></a></li>
+                            
+                            <li class="nolink"><span>Welcome!</span></li>
+                        </ul>
+                    </nav>
+                    <!--// Info-bar -->
+                </div>
+                <!-- // .container -->
+                <div class="learnmore sb-toggle-right">More</div>
+                <button type="button" class="navbar-toggle menu-icon sb-toggle-right" title="More">
+                <span class="sr-only">Toggle navigation</span>
+                <span class="icon-bar before"></span>
+                <span class="icon-bar main"></span>
+                <span class="icon-bar after"></span>
+                </button>
+            </div>
+            <!-- // .navbar-inner -->
+        </div>
+
+        <!-- ============================ Header & Logo bar =========================== -->
+
+
+      
+<section id="intro">
+    <div class="container">
+        <div class="row col-md-offset-2">
+            <div class="col-md-8">
+    			<span class="post-meta">
+      <time datetime="2017-04-07T04:07:46.000Z" itemprop="datePublished">
+          2017-04-07
+      </time>
+    
+</span>
+                <h1>ShareExtension踩坑过程全记录</h1>
+            </div>
+        </div>
+        <div class="col-md-8 col-md-offset-2">
+      		<h2 id="前言"><a href="#前言" class="headerlink" title="前言"></a>前言</h2><p>这是一篇记录踩坑的文章，而不是教程，所以如果你打算用这篇文章开启你ShareExtension世界的大门，那么你来错地方了。但是如果你已经对ShareExtension有所了解，打算开发一个ShareExtension，那这篇文章所提到的内容将有可能对你有所帮助。</p>
+<h2 id="第一坑——繁琐的取数据过程"><a href="#第一坑——繁琐的取数据过程" class="headerlink" title="第一坑——繁琐的取数据过程"></a>第一坑——繁琐的取数据过程</h2><p>假如你写过ShareExtension，那么你知道一段从extension里获取所选文件的过程可能长这样：<br><figure class="highlight objc"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div></pre></td><td class="code"><pre><div class="line">[<span class="keyword">self</span>.extensionContext.inputItems enumerateObjectsUsingBlock:^(<span class="built_in">NSExtensionItem</span>  * extItem, <span class="built_in">NSUInteger</span> idx, <span class="built_in">BOOL</span> * stop) &#123;  </div><div class="line">        <span class="comment">//选择了多少个文件就有多少个attachments</span></div><div class="line">        [extItem.attachments enumerateObjectsUsingBlock:^(<span class="built_in">NSItemProvider</span> * itemProvider, <span class="built_in">NSUInteger</span> idx, <span class="built_in">BOOL</span> * stop) &#123;  </div><div class="line">            <span class="comment">//为了方便，所以这里直接对itemProvider.registeredTypeIdentifiers进行了遍历处理，表示接受所有文件类型。实际上你是要按你所需要的类型进行筛选的。</span></div><div class="line">            <span class="keyword">for</span> (<span class="built_in">NSString</span> * typeId <span class="keyword">in</span> itemProvider.registeredTypeIdentifiers) &#123;</div><div class="line">                [itemProvider loadItemForTypeIdentifier:typeId options:<span class="literal">nil</span> completionHandler:^(<span class="keyword">id</span>&lt;<span class="built_in">NSSecureCoding</span>&gt;   item, <span class="built_in">NSError</span> *  error) &#123;</div><div class="line">                    <span class="comment">//进入到异步线程里了</span></div><div class="line"></div><div class="line">                    <span class="comment">//item多数情况下是文件在本地沙盒下的url，让你通过这个url去读取它。但是根据文档，它还有可能是NSData，不过我并没有遇到过这种情况。</span></div><div class="line"></div><div class="line">                    <span class="comment">//获取文件，通常再通过app group来存储到和宿主程序（host app）共用的plist里实现分享到主程序的功能。但是注意一点，share extension并不能打开宿主程序（然而有黑科技可以实现这个功能，见下文）。</span></div><div class="line"></div><div class="line">                    <span class="keyword">if</span> (error) &#123;</div><div class="line">                        <span class="built_in">NSLog</span>(<span class="string">@"%@"</span>, error.localizedDescription);</div><div class="line">                    &#125;</div><div class="line"></div><div class="line">                    <span class="built_in">dispatch_async</span>(dispatch_get_main_queue(), ^&#123;</div><div class="line">                          [<span class="keyword">self</span>.extensionContext completeRequestReturningItems:@[extItem] completionHandler:<span class="literal">nil</span>];</div><div class="line">                    &#125;);</div><div class="line">                &#125;];</div><div class="line"></div><div class="line">            &#125;</div><div class="line">        &#125;];</div><div class="line">&#125;];</div></pre></td></tr></table></figure></p>
+<p>从代码里可以看到，为了取到数据，我嵌套遍历了很多重。你要在share extension里面获取到用户所选取的文件，你得通过<code>self.extensionContext.inputItems[0].attachments[0].itemProvider</code>去<code>loadItemForTypeIdentifier:completionHandler:</code> … 这真是一个有够长的链式调用，多得让人感觉总有一些属性是多余的。  </p>
+<p>而在实际应用中，当你的Share Extension触发起上面那段代码的时候，<code>self.extensionContext.inputItems</code>往往只有一个，而<code>NSExtensionItem</code>的<code>attachments</code>里存放的对象的数量恰好是被选择分享的文件的数量。而<code>attachments</code>里都是<code>NSItemProvider</code>，<code>NSItemProvider</code>对应的就是每个被选取的文件，可是一个<code>NSItemProvider</code>却不仅仅只有一个<code>typeIdentifier</code>，它可能有多个<code>typeIdentifier</code>——比如一个pdf会有两个typeIdentifier:一个是<code>&quot;public.file-url&quot;</code>，一个是<code>&quot;com.adobe.pdf&quot;</code>。在这之中，<code>&quot;public.file-url&quot;</code>是一个通用的type，由他可以直接获取到当前<code>NSItemProvider</code>的url，而另外一个是PDF独有的<code>typeIdentifier</code>，同样的例如.doc, .ppt这些文件也有一个，专门用来告诉你它是什么类型的文件的。  </p>
+<h2 id="第二坑——打不开宿主程序（host-app"><a href="#第二坑——打不开宿主程序（host-app" class="headerlink" title="第二坑——打不开宿主程序（host app)"></a>第二坑——打不开宿主程序（host app)</h2><p>写过extensions的我们知道要从extension打开宿主程序通常是使用<code>self.extensionContext</code>的<code>-openURL:completionHandler:</code>方法。但是这个方法在share extension里使用会直接crash（<a href="http://stackoverflow.com/questions/27506413/share-extension-to-open-host-app" target="_blank" rel="external">参考这里</a>）。并且在官方文档上也表明，share extension不能打开主程序。<br>但是<code>openURL</code>方法不适用，不代表就没有办法打开宿主程序了。这里有一个比较间接的方法，可以打开宿主程序，但是不保证你使用了这个方法能够通过苹果的审核，这个方法就是用<code>SFSafari​View​Controller</code>来打开你的宿主程序的URL，这样就能从share extension跳转到host app了。  </p>
+<h2 id="第三坑——App-Icon在模拟器中不显示"><a href="#第三坑——App-Icon在模拟器中不显示" class="headerlink" title="第三坑——App Icon在模拟器中不显示"></a>第三坑——App Icon在模拟器中不显示</h2><p>在开发share extension的过程中，我发现模拟器里的的share extension的icon一直是非常丑的一个白色的默认的开发图标，就连我在share extension的<code>assets catalog</code>添加了App Icon都没有反应。于是，经过了一顿查阅，我发现了share extension的app icon是跟宿主程序一样的，在<code>assets catalog</code>里添加的App Icon也会被忽略。根据这一点，我在模拟器里无论是删应用，重启，还是换模拟器，都没用。为此我甚至在stackoverflow上问了<a href="http://stackoverflow.com/questions/43114881/ios-share-extensions-app-icon-not-showing-up" target="_blank" rel="external">一个问题</a>，最终也没有得到回答。<br>后来我将应用装到真机上，App Icon就出现了:)。顺带一提，我的Xcode版本是8.2。  </p>
+<h2 id="第四坑——Share-Extension的应用名的国际化"><a href="#第四坑——Share-Extension的应用名的国际化" class="headerlink" title="第四坑——Share Extension的应用名的国际化"></a>第四坑——Share Extension的应用名的国际化</h2><p>首先得在extension的<code>info.plist</code>里添加一个<code>LSHasLocalizedDisplayName</code>的键，值填YES(类型是布尔)。完了再创建一个叫<code>InfoPlist.strings</code>（请注意大小写）的多语言文件，里面添加<code>CFBundleDisplayName</code>的键值就可以实现对extension的应用名的国际化。但是正是这么简单的一个过程，却难住了我。创建的多语言文件必须得叫<code>InfoPlist.strings</code>，只要差一个字母<code>CFBundleDisplayName</code>就完全不起作用，大小写对不上号也不行，但是其它的所有多语言键值对都可以被使用，只有应用名的这个键值是必须得再<code>InfoPlist.strings</code>内才能起作用。  </p>
+<p>以上的内容就是我在开发ShareExtension过程中遇到的坑。</p>
+
+            <div class="clearfix"></div>
+            <hr class="nogutter">
+        </div>
+        <nav class="pagination" role="pagination">
+    
+    
+    <a class="pull-right" href="/2017/02/26/最近非常火的动画库——Lottie源码解读/">
+        最近非常火的动画库——Lottie源码解读 →
+    </a>
+    
+</nav>
+
+        <div class="duoshuo">
+<div class="ds-thread" data-thread-key="2017/04/07/ShareExtension踩坑过程全记录/" data-title="ShareExtension踩坑过程全记录" data-url="http://yoursite.com/2017/04/07/ShareExtension踩坑过程全记录/"></div>
+<script type="text/javascript">
+var duoshuoQuery = {short_name:"turtle"};
+(function() {
+	var ds = document.createElement('script');
+	ds.type = 'text/javascript';ds.async = true;
+	ds.src = (document.location.protocol == 'https:' ? 'https:' : 'http:') + '//static.duoshuo.com/embed.js';
+	ds.charset = 'UTF-8';
+	(document.getElementsByTagName('head')[0]
+	 || document.getElementsByTagName('body')[0]).appendChild(ds);
+})();
+</script>
+
+</div>
+    </div>
+</section>
+
+
+      
+<!-- ============================ Footer =========================== -->
+
+<footer>
+    <div class="container">
+            <div class="copy">
+                <p>
+                    &copy; 2014<script>new Date().getFullYear()>2010&&document.write("-"+new Date().getFullYear());</script>, Content By Turtle. All Rights Reserved.
+                </p>
+                <p>Theme By <a href="//go.kieran.top" style="color: #767D84">Kieran</a></p>
+            </div>
+            <div class="social">
+                <ul>
+                    
+                    <li><a href="https://github.com/dark19940411" title="Github" target="_blank"><i class="icon-github"></i></a>&nbsp;</li>
+                    
+                    
+                    
+                    
+                    
+                    <li><a href="http://weibo.com/1950154683/profile?rightmod=1&wvr=6&mod=personinfo&is_all=1" title="Sina-Weibo" target="_blank"><i class="icon-sina-weibo"></i></a>&nbsp;</li>
+                    
+                </ul>
+            </div>
+            <div class="clearfix"> </div>
+        </div>
+</footer>
+
+<!-- ============================ END Footer =========================== -->
+      <!-- Load our scripts -->
+        
+<!-- Resizable 'on-demand' full-height hero -->
+<script type="text/javascript">
+    
+    var resizeHero = function () {
+        var hero = $(".cover,.heightblock"),
+            window1 = $(window);
+        hero.css({
+            "height": window1.height()
+        });
+    };
+    
+    resizeHero();
+    
+    $(window).resize(function () {
+        resizeHero();
+    });
+</script>
+<script src="/js/plugins.min.js"></script><!-- Bootstrap core and concatenated plugins always load here -->
+<script src="/js/jquery.flexslider-min.js"></script><!-- Flexslider plugin -->
+<script src="/js/scripts.js"></script><!-- Theme scripts -->
+
+<!-- Initiate flexslider plugin -->
+<script type="text/javascript">
+    $(document).ready(function($) {
+      $('.flexslider').flexslider({
+        animation: "fade",
+        prevText: "",
+        nextText: "",
+        directionNav: true
+      });
+    });
+</script>
+
+</body>
+</html>
