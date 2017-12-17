@@ -1,0 +1,122 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width" />
+    <link rel="stylesheet" href="../../assets/css/main.css">
+<link rel="stylesheet" href="../../libraries/font-awesome-4.7.0/css/font-awesome.min.css">
+
+<script src="../../assets/js/main.js"></script>
+    <title>终于，由我自制的博客发布了</title>
+</head>
+<body>
+<div class="social-media-menu">
+        <span class="social-media-menu-frontpage">
+            <a class="panel-social-jump-btn" href="../../" title="跳转至首页">
+                <i class="fa fa-list"></i>
+            </a>
+        </span>
+        <span class="social-media-menu-inner">
+            <a class="panel-social-jump-btn" href="https://github.com/dark19940411" target="_blank">
+                <i class="fa fa-github"></i>
+            </a>
+            <a class="panel-social-jump-btn" href="https://weibo.com/1950154683" target="_blank">
+                <i class="fa fa-weibo"></i>
+            </a>
+        </span>
+</div>
+
+<script type="text/javascript">var cnzz_protocol = (("https:" == document.location.protocol) ? " https://" : " http://");document.write(unescape("%3Cspan id='cnzz_stat_icon_1271332019'%3E%3C/span%3E%3Cscript src='" + cnzz_protocol + "s22.cnzz.com/z_stat.php%3Fid%3D1271332019%26show%3Dpic1' type='text/javascript'%3E%3C/script%3E"));</script>
+<script>document.getElementById('cnzz_stat_icon_1271332019').style.display = 'none';</script>
+
+<header class="main-panel">
+    <div class="main-panel-cover d-flex justify-content-center">
+        <div class="panel-info-flow-table d-flex align-content-center align-items-center justify-content-center flex-column">
+            <a href="../../" title="跳转至首页">
+                <img class="icon" src="../../assets/images/Icon.jpeg">
+            </a>
+            <div class="panel-name-label">Turtle</div>
+            <div class="panel-subtitle">虽然慢，但是我有在爬呀</div>
+            <hr class="panel-divider">
+            <a class="panel-navi-item" href="../../" title="跳转至首页">首页</a>
+            <div class="panel-social-container">
+                <a class="panel-social-jump-btn" href="https://github.com/dark19940411" target="_blank">
+                    <i class="fa fa-github fa-lg"></i>
+                </a>
+                <a class="panel-social-jump-btn" href="https://weibo.com/1950154683" target="_blank">
+                    <i class="fa fa-weibo fa-lg"></i>
+                </a>
+            </div>
+        </div>
+    </div>
+</header>
+<div class="content-container">
+    <div class="content-inner-wraper">
+        <header>
+            <time class="content-stamp">Sun Dec 17 2017 18:20:53</time>
+            <h1>终于，由我自制的博客发布了</h1>
+        </header>
+        <p>耗时一个半月，终于在跨年之前完成了我的博客的制作～<br>这个博客，是由<a href="https://github.com/dark19940411/TurtleHomePage">Turto</a>生成的。而<strong>Turto</strong>就是由我自制的一个用来生成我的网站的工具。
+它大概长这个样子：<br><img class="content-img" src="images/Turto.gif" alt="null"></p>
+<h1 id="-">制作的缘由</h1>
+<p>一个很关键的原因是在3月份的时候，我的旧博客引用的评论系统多说倒闭了，我当时的博客是由hexo生成的，使用的主题是<a href="https://github.com/SuperKieran/TKL">TKL</a>，它只支持多说作为评论系统。然后迫于无奈之下，我打算更换主题，没想到把自己的hexo弄挂了（折腾了两三周也没折腾好），所以我就把hexo生成的博客给搁置了，暂时在简书上更新博客。后面想到今年自己也学了些前端的知识，干脆弄一个自由度和可控度更高的个人博客吧，于是我就制作了Turto，还有我自己写的页面模板。  </p>
+<p>另外一个原因是我想找一个项目实践一下自己的<code>js</code>，毕竟纸上得来终觉浅嘛。</p>
+<h1 id="-">声明</h1>
+<p>如果你有关注过<a href="https://onevcat.com">王巍</a>，不免会发现我的页面的样式和他的非常相似，是的，为了方便快捷而且美观，我在我的模版里大量拷贝了他的主题<a href="https://github.com/onevcat/vno-jekyll">Vno - Jekyll</a>的样式，并且在我的博客对应的<a href="https://github.com/dark19940411/dark19940411.github.io">github.io</a>下做了相关的License声明，正如他所要求的那样。  </p>
+<h1 id="turto">Turto</h1>
+<p>Turto目前支持三个参数，分别是<code>g(generation)</code>, <code>n(new)</code>, <code>c(clear)</code>。用来生成页面、新建文章、清除生成结果用。<br>它由纯<code>node.js</code>书写，因为我的初衷是用来他将自己的博客工程化，所以没有将它写得像<a href="https://hexo.io/zh-cn/index.html">hexo</a>那么有普适性，也没有把它写成一个node package，目前Turto只能面向我的模板工作。<br>写下Turto，主要是为了让我对我的博客有更高的控制度（就是我想让它有什么插件，就有什么插件）。而它也确实满足了我这个需求。现在我的博客里有着友盟进行统计、AddThis进行分享、disqus进行评论。</p>
+<h2 id="-">主要功能</h2>
+<p>主要功能都集中在<code>Turto g</code>命令里，而生成网站的流程主要分为两个阶段，第一个阶段是构建页面，第二阶段是合并css、js并压缩，再把整个网站的内容移动到发布目录中。  </p>
+<p>第一阶段负责读入我写的<code>markdown</code>文件，渲染成html并将其内部的代码高亮，对于例如图片之类的内容做特殊的样式处理，将每篇渲染好的文章页面写到硬盘上。并按日期排序的做好博客列表页，博客列表分页和文章页页内导航都整理好。其中无可厚非的使用到了诸如<a href="https://github.com/chjj/marked">marked</a>、<a href="https://github.com/substack/minimist">minimist</a>、<a href="https://highlightjs.org">highlight.js</a>等的一些第三方库。  </p>
+<p>第二阶段主要使用<a href="https://gulpjs.com">gulp</a>来完成，这里不得不感谢一波<a href="https://objcer.com">山哥</a>向我推荐的这个库，他也在前端上给了我不少的技术支持。  </p>
+<h2 id="-">缺点</h2>
+<p>自己没有提前了解过<code>js</code>的架构就开始写这个项目，导致Turto的架构比较混乱。我是一个主要从事iOS开发的程序员，平时也接触界面比较多，遇到这种纯逻辑的项目，也只能沿用<code>MVVM</code>的思想来书写，只不过我个人感觉，项目里的依赖拆分还太粗糙就是了。  </p>
+<p>在书写Turto的过程中我有不少新的收获，不过今天怕是没有时间一吐而尽了，改天吧。</p>
+
+        <section class="content-readmore">
+            
+            
+                <div class="content-readmore-item">
+                    
+                    <span class="content-readmore-item-dim">更早的文章</span>
+                    <h2 class="post-title">
+                        <a href="../RxSwift的学习之路（二）——Subjects/RxSwift的学习之路（二）——Subjects.html" title="跳转至RxSwift的学习之路（二）——Subjects">
+                            RxSwift的学习之路（二）——Subjects
+                        </a>
+                    </h2>
+
+                    <p class="breviary">
+                        最近比较忙，更新得有点慢，望谅解。上一章我介绍了Observable——一个功能就像一条数据流的类。这一章的内容比较简单，Subject和Observable还是挺相似的，如果说Observable是专门用来被订阅获取数据的一个“被动”的类，那么比起Observable，Subject倒是占据了一点主动。  它可以作为一个被订阅者供给外部订阅，也可以作为一个观察者，接收事件，然后发出给订阅者。所以它要比Obsavable更加的灵活一点，按照我的理解，它应该是一种支持一边接收事件，一边接收订阅者的……
+                    </p>
+                    <time class="content-stamp">Tue Jun 27 2017 10:04:43</time>
+                    <a href="../RxSwift的学习之路（二）——Subjects/RxSwift的学习之路（二）——Subjects.html" title="跳转至RxSwift的学习之路（二）——Subjects" class="round-border-btn">继续阅读</a>
+                </div>
+            
+        </section>
+        <div id="disqus_thread"></div>
+        <script>
+
+            /**
+             *  RECOMMENDED CONFIGURATION VARIABLES: EDIT AND UNCOMMENT THE SECTION BELOW TO INSERT DYNAMIC VALUES FROM YOUR PLATFORM OR CMS.
+             *  LEARN WHY DEFINING THESE VARIABLES IS IMPORTANT: https://disqus.com/admin/universalcode/#configuration-variables*/
+
+            var disqus_config = function () {
+                var address = 'http://tech.imturtle.cn/blogpost/' + '终于，由我自制的博客发布了/' + '终于，由我自制的博客发布了.html';
+                this.page.url = address;  // Replace PAGE_URL with your page's canonical URL variable
+                this.page.identifier = address; // Replace PAGE_IDENTIFIER with your page's unique identifier variable
+            };
+
+            (function() { // DON'T EDIT BELOW THIS LINE
+                var d = document, s = d.createElement('script');
+                s.src = 'https://turtles-burrow.disqus.com/embed.js';
+                s.setAttribute('data-timestamp', +new Date());
+                (d.head || d.body).appendChild(s);
+            })();
+        </script>
+        <noscript>Please enable JavaScript to view the <a href="https://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+    </div>
+</div>
+<!-- Go to www.addthis.com/dashboard to customize your tools --> <script type="text/javascript" src="//s7.addthis.com/js/300/addthis_widget.js#pubid=ra-5a30e109c39d59b6"></script>
+
+</body>
+</html>
