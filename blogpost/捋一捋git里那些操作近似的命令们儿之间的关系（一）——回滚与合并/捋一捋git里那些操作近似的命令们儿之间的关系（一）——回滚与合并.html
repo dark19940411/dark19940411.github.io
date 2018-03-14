@@ -1,0 +1,147 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width" />
+    <link rel="stylesheet" href="../../assets/css/main.css">
+<link rel="stylesheet" href="../../libraries/font-awesome-4.7.0/css/font-awesome.min.css">
+
+<script src="../../assets/js/main.js"></script>
+    <title>捋一捋git里那些操作近似的命令们儿之间的关系（一）——回滚与合并</title>
+</head>
+<body>
+<div class="social-media-menu">
+        <span class="social-media-menu-frontpage">
+            <a class="panel-social-jump-btn" href="../../" title="跳转至首页">
+                <i class="fa fa-list"></i>
+            </a>
+        </span>
+        <span class="social-media-menu-inner">
+            <a class="panel-social-jump-btn" href="https://github.com/dark19940411" target="_blank">
+                <i class="fa fa-github"></i>
+            </a>
+            <a class="panel-social-jump-btn" href="https://weibo.com/1950154683" target="_blank">
+                <i class="fa fa-weibo"></i>
+            </a>
+        </span>
+</div>
+
+<script type="text/javascript">var cnzz_protocol = (("https:" == document.location.protocol) ? " https://" : " http://");document.write(unescape("%3Cspan id='cnzz_stat_icon_1271332019'%3E%3C/span%3E%3Cscript src='" + cnzz_protocol + "s22.cnzz.com/z_stat.php%3Fid%3D1271332019%26show%3Dpic1' type='text/javascript'%3E%3C/script%3E"));</script>
+<script>document.getElementById('cnzz_stat_icon_1271332019').style.display = 'none';</script>
+
+<header class="main-panel">
+    <div class="main-panel-cover d-flex justify-content-center">
+        <div class="panel-info-flow-table d-flex align-content-center align-items-center justify-content-center flex-column">
+            <a href="../../" title="跳转至首页">
+                <img class="icon" src="../../assets/images/Icon.jpeg">
+            </a>
+            <div class="panel-name-label">Turtle</div>
+            <div class="panel-subtitle">虽然慢，但是我有在爬呀</div>
+            <hr class="panel-divider">
+            <a class="panel-navi-item" href="../../" title="跳转至首页">首页</a>
+            <div class="panel-social-container">
+                <a class="panel-social-jump-btn" href="https://github.com/dark19940411" target="_blank">
+                    <i class="fa fa-github fa-lg"></i>
+                </a>
+                <a class="panel-social-jump-btn" href="https://weibo.com/1950154683" target="_blank">
+                    <i class="fa fa-weibo fa-lg"></i>
+                </a>
+            </div>
+        </div>
+    </div>
+</header>
+<div class="content-container">
+    <div class="content-inner-wraper">
+        <header>
+            <time class="content-stamp">Fri Mar 02 2018 09:46:57</time>
+            <h1>捋一捋git里那些操作近似的命令们儿之间的关系（一）——回滚与合并</h1>
+        </header>
+        <p>这是一篇最近在学习<code>git</code>的时候有感而发的文章，因为<code>git</code>里有许多不同的命令，但进行操作后可能会产生相同或者近似的行为，打算写一个系列的文章来捋清楚或者说记录个中的关系，全系列分为三篇文章，而每篇文章会讲两个主题。  </p>
+<h2 id="-revert-reset-checkout">回滚代码的利器——revert、reset和checkout</h2>
+<p>回滚代码是日常开发中的一个不常使用，但是又不可或缺的功能。在git里，有三个命令是可以用来回滚代码的，它们分别是<code>revert</code>、<code>reset</code>和<code>checkout</code>。</p>
+<h3 id="checkout-">checkout式回滚</h3>
+<p>实际上单说<code>checkout</code>是一个回滚代码的命令又并不是那么准确，当我们<code>checkout</code>到某个提交点的时候我们会造成分离的<code>HEAD</code>指针（<a href="https://git-scm.com/docs/git-checkout#_detached_head">Detached HEAD</a>）的情况，如果不创建新分支而持续工作下去，有可能会导致工作记录丢失的情况。因为<code>checkout</code>实际上是检出<code>HEAD</code>指针到某个分支或者某个提交点上，而在工作副本看到的代码即是<code>HEAD</code>指针所指向的提交。所以当你<code>checkout</code>某个branch（以<code>master</code>为例）的时候，在git里的实际是<code>HEAD-&gt;master-&gt;0eacb...(master的最新提交)</code>，但是假若你直接检出到某个提交，则是<code>HEAD-&gt;ac0ef...（你检出的提交）</code>。  </p>
+<p><img class="content-img" src="images/checkout_rollback.png" alt="null"><br>（代表commit的理论上应该是一串SHA-1码，这里为了方便和简洁，就用C1、C2、C3...来表示吧：P） </p>
+<p>所以，使用<code>git checkout</code>来回滚代码的时候，最好同时配上<code>git branch</code>来创建分支，来保证你今后的工作记录不会丢失。  </p>
+<p><img class="content-img" src="images/checkout_rollback_finished.png" alt="null">  </p>
+<p>或者你也可以使用<code>git checkout -b &lt;branchName&gt; &lt;commit SHA-1 code&gt;</code>来直接于某个提交点创建并切换到指定分支。  </p>
+<p>利用<code>checkout</code>来回滚其实优缺点很明显，优点就是回滚代码不需要对工作中的分支进行操作，不会对它有任何改动，可以用来做一些“不太确定的回滚操作”——或许一个功能你想到了更好的实现方式，你想试一试，但是又想保留当前的工作代码；缺点则为为了保证不会出现分离的<code>HEAD</code>指针的情况，不得不再创建一条分支，多次使用后可能会导致分支过多。  </p>
+<p><code>checkout</code>式回滚是一个不会对正在工作的分支进行改动的回滚方式，那么<code>revert</code>和<code>reset</code>命令呢？  </p>
+<h3 id="git-reset">git reset</h3>
+<p><code>git reset &lt;commit SHA-1 code&gt;</code>命令是将当前检出的分支重置于指定的提交处。注意：这是一个直接修改分支历史的命令，并且由于它可以将当前分支重置至所有提交历史的任意提交点（重置至一个非当前分支的历史的提交点也是可以的），所以也让它的功能并不仅仅局限于回滚，但是在这里，我们只讨论用它来进行代码回滚的影响。  </p>
+<p>首先，<code>reset</code>会有三种重置分支到某个特殊提交点的方式，分别是<code>--soft</code>、<code>--mixed</code>、<code>--hard</code>，无论是哪一种方式都会造成分支被更改，三种方式只是影响操作的区域。<code>soft</code>只对版本库（也就是分支历史）进行重置，并不会影响暂存区以及工作区；<code>mixed</code>既重置分支历史，也重置暂存区，但是并不会对工作区造成影响；<code>hard</code>则是会同时操作三个区域。（tips：如果对<code>git</code>的工作区、暂存区和版本库不太熟悉可以看看<a href="https://www.liaoxuefeng.com/wiki/0013739516305929606dd18361248578c67b8067c8c017b000/0013745374151782eb658c5a5ca454eaa451661275886c6000">这篇文章</a>)  </p>
+<p>那么，很明显的是<code>reset</code>是一个会改动分支历史的操作，所以它是相对危险的。
+<img class="content-img" src="images/reset_before.jpg" alt="null">  </p>
+<pre><code class="hljs undefined"><span class="hljs-symbol">git</span> reset <span class="hljs-built_in">C2</span></code></pre><p><img class="content-img" src="images/reset_after.jpg" alt="null">  </p>
+<p>从图中可以看出来，<code>reset</code>改动了<code>master</code>的历史，其次也造成了悬垂提交<code>C3</code>的出现，而如果不建立分支来保存<code>C3</code>这个提交的话，在下一次<code>git</code>进行垃圾回收的时候，就会清除掉该提交了。并且，倘若你正在和别人进行协作开发，不巧的是<code>C3</code>也已经被上传了，那么你就最好不要对<code>master</code>进行<code>reset</code>了，因为改动了<code>master</code>的历史会让你无法<code>push</code>你的新改动到服务器（实际上还是可以强制<code>push</code>到服务器，但是这样会令和你一起协作的朋友无法拉取新的提交，小心惹恼他们喔：P）。  </p>
+<p>但是如果你的提交都仍然在本地，或者这仅仅只是你的个人项目，而有一段历史提交你并不想要或者你并不在意，那么你可以用<code>reset</code>来改变当前分支的历史，从而达到回滚代码的效果，同时也把历史记录给回滚了。  </p>
+<h3 id="-revert-">利用revert来回滚代码</h3>
+<p>比起使用<code>checkout</code>、<code>reset</code>来进行代码的回滚操作，我更觉得<code>revert</code>就是一个专门为回滚代码而准备的命令，毕竟实际上<code>checkout</code>和<code>reset</code>有超出“代码回滚”之外的额外用途，然而<code>revert</code>并没有，并且它不会改动分支历史，它的用法长这样：  </p>
+<pre><code class="hljs undefined"><span class="hljs-symbol">git</span> <span class="hljs-keyword">revert </span>&lt;commit SHA-<span class="hljs-number">1</span> <span class="hljs-meta">code</span>&gt;</code></pre><p><code>revert</code>命令后面由你所指定的提交还不能是当前分支历史以外的点，只能是分支历史当中的提交。<br><img class="content-img" src="images/revert_graph.png" alt="null"><br>（例如图中的<code>master</code>分支不能<code>revert</code>图里的<code>C5</code>）  </p>
+<p>而在你<code>revert</code>一个提交的时候，实际上<code>git</code>是把该提交“逆向”再提交一次，生成一个新的提交点，但实际上，工作区里已经回滚了指定提交的改动了。正因为<code>revert</code>回滚代码的整洁性，使它成为了团队协作时，用来进行代码回滚的优良方式，而就算你是在你的个人项目中工作，也可以使用它，没有毛病。  </p>
+<p>但是<code>revert</code>同样也有缺点，就是它一次只能回滚一个<code>commit</code>，并不能一段历史一段历史的进行回滚。但是它可以回滚得更加确切，像<code>reset</code>和<code>checkout</code>都只能回滚<strong>最新的点</strong>到<strong>指定的点</strong>的一整段历史，而<code>revert</code>可以自己来挑选<strong>某一个提交</strong>用以回滚。  </p>
+<p>下图为在<code>master</code>中执行<code>git revert C3</code>后的状况：<br><img class="content-img" src="images/revert_after.png" alt="null">  </p>
+<h2 id="-rebase-merge">合并代码的两种方式——rebase和merge</h2>
+<p>日常开发中使用的比较多的另外一个功能就是分支合并了，而<code>git</code>为我们提供了两种方式来进行分支合并，一个是<code>rebase</code>，一个则是<code>merge</code>。  </p>
+<h3 id="rebase-">rebase——一种“简洁”的代码合并方式</h3>
+<p><code>rebase</code>的官方中文翻译是&quot;变基&quot;，实际上，当你有一条功能分支开发完成，想要并入主干的时候，你可以选择使用<code>rebase</code>来做这件事。使用<code>rebase</code>从<code>feature</code>分支变基到<code>master</code>分支会使得历史看起来都在一条直线上，没有“岔路”。  </p>
+<p><img class="content-img" src="images/rebasae_graph.jpg" alt="null">  </p>
+<pre><code class="hljs undefined">git rebase <span class="hljs-literal">master</span></code></pre><p><code>rebase</code>实际上就是以<code>master</code>与<code>feature</code>分支开始“分岔”的提交点开始计算，将<code>feature</code>分支中新增的所有提交全部移动到<code>master</code>分支的最新提交点后。  </p>
+<p>从图中不难看出来，一般来说的合并，都是将功能分支合回主干，但是从图中的<code>rebase</code>实际上相当于将主干中的新提交并入到功能分支中，而实际上没有更新<code>master</code>分支。合理的做法是再检出到<code>master</code>分支然后执行：</p>
+<pre><code class="hljs undefined">git <span class="hljs-keyword">merge</span> feature</code></pre><p>就可以了。  </p>
+<p>但是这个操作并不是单纯的<code>rebase</code>，这是综合了<code>merge</code>命令的一个操作，那么比起这个方法，还有更好的方法吗？有的，那就是将<code>master</code>分支<code>rebase</code>到<code>feature</code>分支之上，只需<code>rebase</code>一次，无需后续的<code>merge</code>操作，就可以达到上面的两次操作加在一起的效果。不过，这个方法实际相当危险，因为它改动了<code>master</code>的历史（<code>feature</code>的提交历史间插在了<code>master</code>的过去）！一般来说功能分支都是一条比较“私人化”的分支，而对比于它，主干分支则显得比较“公共”，所以在对<code>rebase</code>造成的最终影响的判断上，功能分支更加容易判断出有无问题，而主干的影响面相当广，所以一般来说，如果想要创造“一条直线”的历史而又不想造成太大的负面影响，最好把功能分支<code>rebase</code>到主干分支上，再合并回主干！  </p>
+<p>但无论如何，<code>rebase</code>都会改动分支的历史，所以如果你对它还不够熟悉，建议不要轻易使用。尽管它可以创造整洁的“直线”式提交历史，但是它对历史的改动也让“追查旧账”变得不那么容易。  </p>
+<h3 id="merge-">merge——合并分支的常规操作</h3>
+<p><code>git merge &lt;branch name&gt;</code>命令在动词<code>merge</code>后面可以跟上一个介词from，这会更贴近与它的意思。因为<code>merge</code>实际上就是将另一分支的所有当前分支没有的提交合并入当前分支，并产生一个新的提交点，而作为对比，<code>rebase</code>的行为看起来更像应该在后面加上一个介词to，毕竟<code>rebase</code>是将当前分支所有新的提交变基到指定分支之上。从行为上来说确实是这样，但是结果上发生了变更的分支都是当前分支。  </p>
+<p>而使用<code>merge</code>来合并代码，它会保留分支历史原有的“岔路”，所以一旦分支多起来，分支历史看起来就不那么的整洁。但是相对地，它可以保留住所有的历史，便于在未来排查问题。  </p>
+<p><img class="content-img" src="images/merge_graph.jpg" alt="null">  </p>
+<h2 id="-">总结</h2>
+<p>综上所述，所提到的命令，有它们相近的地方，但是其实又是有所区别的，一个不小心，你就容易将它们混淆。而当你足够了解它们的时候，你可以结合它们的优缺点，发挥出各个命令应有的效果，从而做到扬长避短，发挥出<code>git</code>的最大效能。</p>
+
+        <section class="content-readmore">
+            
+            
+                <div class="content-readmore-item">
+                    
+                    <span class="content-readmore-item-dim">更早的文章</span>
+                    <h2 class="post-title">
+                        <a href="../2017年终总结/2017年终总结.html" title="跳转至2017年终总结">
+                            2017年终总结
+                        </a>
+                    </h2>
+
+                    <p class="breviary">
+                        又到了一年的年末，过去就一直想写篇总结来回顾自己一年以来的成长，但是苦于没有一个像样的博客，也有可能只是纯粹的懒，所以一直都没有写。今年，自己的博客也上线了，怎么也是时候写了吧。2017发生了很多事情，我也从中学到了很多，并且在以社会人这个身份度过了一年以后，我开始更加地了解自己。  这是我的第一篇年终总结，没有经验，也不知从何说起，那我就脑子里冒出什么，写什么吧。先来说说年初发生的一件让我痛彻心扉，刻骨铭心的事吧！那就是我做了前叉韧带修复手术+半月板缝合术，原因是因为16年初的一场篮球赛。而术……
+                    </p>
+                    <time class="content-stamp">Tue Dec 26 2017 22:16:01</time>
+                    <a href="../2017年终总结/2017年终总结.html" title="跳转至2017年终总结" class="round-border-btn">继续阅读</a>
+                </div>
+            
+        </section>
+        <div id="disqus_thread"></div>
+        <script>
+
+            /**
+             *  RECOMMENDED CONFIGURATION VARIABLES: EDIT AND UNCOMMENT THE SECTION BELOW TO INSERT DYNAMIC VALUES FROM YOUR PLATFORM OR CMS.
+             *  LEARN WHY DEFINING THESE VARIABLES IS IMPORTANT: https://disqus.com/admin/universalcode/#configuration-variables*/
+
+            var disqus_config = function () {
+                var address = 'http://tech.imturtle.cn/blogpost/' + '捋一捋git里那些操作近似的命令们儿之间的关系（一）——回滚与合并/' + '捋一捋git里那些操作近似的命令们儿之间的关系（一）——回滚与合并.html';
+                this.page.url = address;  // Replace PAGE_URL with your page's canonical URL variable
+                this.page.identifier = address; // Replace PAGE_IDENTIFIER with your page's unique identifier variable
+            };
+
+            (function() { // DON'T EDIT BELOW THIS LINE
+                var d = document, s = d.createElement('script');
+                s.src = 'https://turtles-burrow.disqus.com/embed.js';
+                s.setAttribute('data-timestamp', +new Date());
+                (d.head || d.body).appendChild(s);
+            })();
+        </script>
+        <noscript>Please enable JavaScript to view the <a href="https://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+    </div>
+</div>
+<!-- Go to www.addthis.com/dashboard to customize your tools --> <script type="text/javascript" src="//s7.addthis.com/js/300/addthis_widget.js#pubid=ra-5a30e109c39d59b6"></script>
+
+</body>
+</html>
