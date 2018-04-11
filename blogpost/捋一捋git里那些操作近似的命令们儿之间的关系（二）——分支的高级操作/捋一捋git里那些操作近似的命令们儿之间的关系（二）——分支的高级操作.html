@@ -72,7 +72,7 @@
 <p>为了方便讲解，先上一副图：
 <img class="content-img" src="images/interactive-rebase-before.png" alt="null">  </p>
 <p>在一条呈直线的<code>master</code>分支上，有6个提交点，如果此时我执行这个命令，它会发生什么呢？  </p>
-<pre><code class="hljs undefined">git rebase -<span class="hljs-selector-tag">i</span> HEAD~<span class="hljs-number">3</span></code></pre><p><img class="content-img" src="images/irebase-gui-opbefore.png" alt="null">  </p>
+<pre><code class="hljs undefined">git rebase -<span class="hljs-selector-tag">i</span> HEAD~<span class="hljs-number">3</span></code></pre><p><img class="content-img" src="images/irebase-gui-opbefore.jpg" alt="null">  </p>
 <p><code>git</code>会像这样弹出一个可视化的弹窗，图里比较“优雅”，实际在终端像这样执行命令的话则会唤起vim，里面有着一些可视化的数据，和上图类似，你可以决定<code>pick</code>或者<code>drop</code>一些提交，并且还可以调整它们的先后次序，最后将你操作好的一串记录从新加之于你所指定的提交之后。上述命令指定的提交是<code>HEAD~3</code>，也就是<code>HEAD</code>再往前数三个提交，即<code>C2</code>。  </p>
 <blockquote>
 <p>pick指需要这个提交，drop指放弃这个提交  </p>
