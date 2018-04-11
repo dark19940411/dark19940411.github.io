@@ -55,11 +55,25 @@
             
                 <li>
                     <h2 class="post-title">
+                        <a href="blogpost/捋一捋git里那些操作近似的命令们儿之间的关系（二）——分支的高级操作/捋一捋git里那些操作近似的命令们儿之间的关系（二）——分支的高级操作.html" title="跳转至捋一捋git里那些操作近似的命令们儿之间的关系（二）——分支的高级操作">
+                            捋一捋git里那些操作近似的命令们儿之间的关系（二）——分支的高级操作
+                        </a>
+                    </h2>
+                    <p class="breviary">回顾了这个系列的上一篇文章，讲的是分支的合并与回滚操作之中，那些作用相似的命令。而在这篇里，则说几个用于分支上的高级操作，同样，他们之间也有着或多或少的相似性，容易混淆或者记错，在这里做下记录，并且对比他们的差异。  说到微调分支的历史，交互式rebase和cherry-pick无疑就是用于这个功能中的佼佼者，它们可以篡改分支的历史（毫无疑问），详细的说，它们能够遴选某个提交而舍弃不需要的提交，也可以更改提交的顺序。总之，如果能灵活运用的话，它们的功能是相当强大的。  交互式rebase在git……</p>
+                    <span class="post-list__meta">
+                        <time class="content-stamp">Wed Apr 11 2018 23:22:57</time>
+                        <a href="blogpost/捋一捋git里那些操作近似的命令们儿之间的关系（二）——分支的高级操作/捋一捋git里那些操作近似的命令们儿之间的关系（二）——分支的高级操作.html" title="跳转至捋一捋git里那些操作近似的命令们儿之间的关系（二）——分支的高级操作" class="round-border-btn">继续阅读</a>
+                    </span>
+                    <hr class="post-list__divider">
+                </li>
+            
+                <li>
+                    <h2 class="post-title">
                         <a href="blogpost/捋一捋git里那些操作近似的命令们儿之间的关系（一）——回滚与合并/捋一捋git里那些操作近似的命令们儿之间的关系（一）——回滚与合并.html" title="跳转至捋一捋git里那些操作近似的命令们儿之间的关系（一）——回滚与合并">
                             捋一捋git里那些操作近似的命令们儿之间的关系（一）——回滚与合并
                         </a>
                     </h2>
-                    <p class="breviary">这是一篇最近在学习git的时候有感而发的文章，因为git里有许多不同的命令，但进行操作后可能会产生相同或者近似的行为，打算写一个系列的文章来捋清楚或者说记录个中的关系，全系列分为三篇文章，而每篇文章会讲两个主题。  回滚代码是日常开发中的一个不常使用，但是又不可或缺的功能。在git里，有三个命令是可以用来回滚代码的，它们分别是revert、reset和checkout。实际上单说checkout是一个回滚代码的命令又并不是那么准确，当我们checkout到某个提交点的时候我们会造成分离的HEAD……</p>
+                    <p class="breviary">这是一篇最近在学习git的时候有感而发的文章，因为git里有许多不同的命令，但进行操作后可能会产生相同或者近似的行为，打算写一个系列的文章来捋清楚或者说记录个中的关系，全系列分为三篇文章，而每篇文章会讲两个主题。  文章中所有的示意图中，当前检出的git分支为在分支名右侧加了*号的分支。如：master*回滚代码是日常开发中的一个不常使用，但是又不可或缺的功能。在git里，有三个命令是可以用来回滚代码的，它们分别是revert、reset和checkout。实际上单说checkout是一个回滚代……</p>
                     <span class="post-list__meta">
                         <time class="content-stamp">Fri Mar 02 2018 09:46:57</time>
                         <a href="blogpost/捋一捋git里那些操作近似的命令们儿之间的关系（一）——回滚与合并/捋一捋git里那些操作近似的命令们儿之间的关系（一）——回滚与合并.html" title="跳转至捋一捋git里那些操作近似的命令们儿之间的关系（一）——回滚与合并" class="round-border-btn">继续阅读</a>
@@ -176,22 +190,6 @@
                     <span class="post-list__meta">
                         <time class="content-stamp">Wed Dec 07 2016 19:50:59</time>
                         <a href="blogpost/IBOutlet为什么默认是weak的？到底应该设置成strong还是weak？/IBOutlet为什么默认是weak的？到底应该设置成strong还是weak？.html" title="跳转至IBOutlet为什么默认是weak的？到底应该设置成strong还是weak？" class="round-border-btn">继续阅读</a>
-                    </span>
-                    <hr class="post-list__divider">
-                </li>
-            
-                <li>
-                    <h2 class="post-title">
-                        <a href="blogpost/单例猛如虎，请小心使用/单例猛如虎，请小心使用.html" title="跳转至单例猛如虎，请小心使用">
-                            单例猛如虎，请小心使用
-                        </a>
-                    </h2>
-                    <p class="breviary">单例模式是一个在iOS里面备受使用的设计模式。但是我们在尽情使用它的时候，一定要注意到它其实也有很多隐含的问题。
-其实这篇文章也相当于看了objcio上的避免滥用单例的一篇总结。
-结合自己最近开发的心得，来讲一下单例的一些利与弊吧。首先单例最原始的创建方式就是但是这种创建方式在多线程环境下会出问题，假如两条线程同时执行到if的话，就会各自获取到两个实例了。为了解决这个问题，我们可以想到上锁，于是有了下面这个版本：但是因为我们都知道，访问一个锁的开销很大，考虑到性能的问题，iOS在最后给我们推出了……</p>
-                    <span class="post-list__meta">
-                        <time class="content-stamp">Fri Oct 21 2016 19:48:38</time>
-                        <a href="blogpost/单例猛如虎，请小心使用/单例猛如虎，请小心使用.html" title="跳转至单例猛如虎，请小心使用" class="round-border-btn">继续阅读</a>
                     </span>
                     <hr class="post-list__divider">
                 </li>

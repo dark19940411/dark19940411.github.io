@@ -57,16 +57,22 @@
             <h1>捋一捋git里那些操作近似的命令们儿之间的关系（一）——回滚与合并</h1>
         </header>
         <p>这是一篇最近在学习<code>git</code>的时候有感而发的文章，因为<code>git</code>里有许多不同的命令，但进行操作后可能会产生相同或者近似的行为，打算写一个系列的文章来捋清楚或者说记录个中的关系，全系列分为三篇文章，而每篇文章会讲两个主题。  </p>
+<blockquote>
+<p>文章中所有的示意图中，当前检出的<code>git</code>分支为在分支名右侧加了*号的分支。如：master*</p>
+</blockquote>
 <h2 id="-revert-reset-checkout">回滚代码的利器——revert、reset和checkout</h2>
 <p>回滚代码是日常开发中的一个不常使用，但是又不可或缺的功能。在git里，有三个命令是可以用来回滚代码的，它们分别是<code>revert</code>、<code>reset</code>和<code>checkout</code>。</p>
 <h3 id="checkout-">checkout式回滚</h3>
-<p>实际上单说<code>checkout</code>是一个回滚代码的命令又并不是那么准确，当我们<code>checkout</code>到某个提交点的时候我们会造成分离的<code>HEAD</code>指针（<a href="https://git-scm.com/docs/git-checkout#_detached_head">Detached HEAD</a>）的情况，如果不创建新分支而持续工作下去，有可能会导致工作记录丢失的情况。因为<code>checkout</code>实际上是检出<code>HEAD</code>指针到某个分支或者某个提交点上，而在工作副本看到的代码即是<code>HEAD</code>指针所指向的提交。所以当你<code>checkout</code>某个branch（以<code>master</code>为例）的时候，在git里的实际是<code>HEAD-&gt;master-&gt;0eacb...(master的最新提交)</code>，但是假若你直接检出到某个提交，则是<code>HEAD-&gt;ac0ef...（你检出的提交）</code>。  </p>
+<p>实际上单说<code>checkout</code>是一个回滚代码的命令又并不是那么准确，当我们<code>checkout</code>到某个提交点的时候我们会造成分离的<code>HEAD</code>指针（<a href="https://git-scm.com/docs/git-checkout#_detached_head">Detached HEAD</a>）的情况，如果不创建新分支而持续工作下去，是有可能会导致工作记录丢失的。因为<code>checkout</code>实际上是检出<code>HEAD</code>指针到某个分支或者某个提交点上，而在工作副本看到的代码即是<code>HEAD</code>指针所指向的提交。所以当你<code>checkout</code>某个branch（以<code>master</code>为例）的时候，在git里的实际是<code>HEAD-&gt;master-&gt;0eacb...(master的最新提交)</code>，但是假若你直接检出到某个提交，则是<code>HEAD-&gt;ac0ef...（你检出的提交）</code>。  </p>
+<blockquote>
+<p>关于git里的HEAD指针，想了解更多可以看<a href="https://blog.csdn.net/claroja/article/details/78858533">这片文章</a>。  </p>
+</blockquote>
 <p><img class="content-img" src="images/checkout_rollback.png" alt="null"><br>（代表commit的理论上应该是一串SHA-1码，这里为了方便和简洁，就用C1、C2、C3...来表示吧：P） </p>
 <p>所以，使用<code>git checkout</code>来回滚代码的时候，最好同时配上<code>git branch</code>来创建分支，来保证你今后的工作记录不会丢失。  </p>
 <p><img class="content-img" src="images/checkout_rollback_finished.png" alt="null">  </p>
 <p>或者你也可以使用<code>git checkout -b &lt;branchName&gt; &lt;commit SHA-1 code&gt;</code>来直接于某个提交点创建并切换到指定分支。  </p>
 <p>利用<code>checkout</code>来回滚其实优缺点很明显，优点就是回滚代码不需要对工作中的分支进行操作，不会对它有任何改动，可以用来做一些“不太确定的回滚操作”——或许一个功能你想到了更好的实现方式，你想试一试，但是又想保留当前的工作代码；缺点则为为了保证不会出现分离的<code>HEAD</code>指针的情况，不得不再创建一条分支，多次使用后可能会导致分支过多。  </p>
-<p><code>checkout</code>式回滚是一个不会对正在工作的分支进行改动的回滚方式，那么<code>revert</code>和<code>reset</code>命令呢？  </p>
+<p><code>checkout</code>式回滚是一个不会对正在工作的分支进行改动的回滚方式，那么<code>reset</code>和<code>revert</code>命令呢？  </p>
 <h3 id="git-reset">git reset</h3>
 <p><code>git reset &lt;commit SHA-1 code&gt;</code>命令是将当前检出的分支重置于指定的提交处。注意：这是一个直接修改分支历史的命令，并且由于它可以将当前分支重置至所有提交历史的任意提交点（重置至一个非当前分支的历史的提交点也是可以的），所以也让它的功能并不仅仅局限于回滚，但是在这里，我们只讨论用它来进行代码回滚的影响。  </p>
 <p>首先，<code>reset</code>会有三种重置分支到某个特殊提交点的方式，分别是<code>--soft</code>、<code>--mixed</code>、<code>--hard</code>，无论是哪一种方式都会造成分支被更改，三种方式只是影响操作的区域。<code>soft</code>只对版本库（也就是分支历史）进行重置，并不会影响暂存区以及工作区；<code>mixed</code>既重置分支历史，也重置暂存区，但是并不会对工作区造成影响；<code>hard</code>则是会同时操作三个区域。（tips：如果对<code>git</code>的工作区、暂存区和版本库不太熟悉可以看看<a href="https://www.liaoxuefeng.com/wiki/0013739516305929606dd18361248578c67b8067c8c017b000/0013745374151782eb658c5a5ca454eaa451661275886c6000">这篇文章</a>)  </p>
@@ -99,6 +105,22 @@
 <p>综上所述，所提到的命令，有它们相近的地方，但是其实又是有所区别的，一个不小心，你就容易将它们混淆。而当你足够了解它们的时候，你可以结合它们的优缺点，发挥出各个命令应有的效果，从而做到扬长避短，发挥出<code>git</code>的最大效能。</p>
 
         <section class="content-readmore">
+            
+                <div class="content-readmore-item">
+                    
+                    <span class="content-readmore-item-dim">最近的文章</span>
+                    <h2 class="post-title">
+                        <a href="../捋一捋git里那些操作近似的命令们儿之间的关系（二）——分支的高级操作/捋一捋git里那些操作近似的命令们儿之间的关系（二）——分支的高级操作.html" title="跳转至捋一捋git里那些操作近似的命令们儿之间的关系（二）——分支的高级操作">
+                            捋一捋git里那些操作近似的命令们儿之间的关系（二）——分支的高级操作
+                        </a>
+                    </h2>
+
+                    <p class="breviary">
+                        回顾了这个系列的上一篇文章，讲的是分支的合并与回滚操作之中，那些作用相似的命令。而在这篇里，则说几个用于分支上的高级操作，同样，他们之间也有着或多或少的相似性，容易混淆或者记错，在这里做下记录，并且对比他们的差异。  说到微调分支的历史，交互式rebase和cherry-pick无疑就是用于这个功能中的佼佼者，它们可以篡改分支的历史（毫无疑问），详细的说，它们能够遴选某个提交而舍弃不需要的提交，也可以更改提交的顺序。总之，如果能灵活运用的话，它们的功能是相当强大的。  交互式rebase在git……
+                    </p>
+                    <time class="content-stamp">Wed Apr 11 2018 23:22:57</time>
+                    <a href="../捋一捋git里那些操作近似的命令们儿之间的关系（二）——分支的高级操作/捋一捋git里那些操作近似的命令们儿之间的关系（二）——分支的高级操作.html" title="跳转至捋一捋git里那些操作近似的命令们儿之间的关系（二）——分支的高级操作" class="round-border-btn">继续阅读</a>
+                </div>
             
             
                 <div class="content-readmore-item">
