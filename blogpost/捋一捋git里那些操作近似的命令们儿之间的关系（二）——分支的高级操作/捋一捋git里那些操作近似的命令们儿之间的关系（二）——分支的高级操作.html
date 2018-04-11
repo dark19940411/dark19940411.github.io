@@ -63,7 +63,7 @@
 <p>交互式<code>rebase</code>在<code>git</code>里由以下命令触发：  </p>
 <pre><code class="hljs undefined">git rebase -<span class="hljs-selector-tag">i</span> 或者 --interactive [commit SHA-<span class="hljs-number">1</span> code]</code></pre><p>交互式<code>rebase</code>和普通<code>rebase</code>不太一样，交互式<code>rebase</code>可以指定任意提交点（除自己以外的分支也是可以作为目标的，当然<code>HEAD</code>提交也是可以的）作为目标，包括当前分支所包含的过去提交点；反观普通<code>rebase</code>，只能以另外一条分支或者当前分支历史以外的提交点作为目标。  </p>
 <p>而在功能上，它们也是有质的区别的。  </p>
-<p>据<a href="blogpost/捋一捋git里那些操作近似的命令们儿之间的关系（一）——回滚与合并/捋一捋git里那些操作近似的命令们儿之间的关系（一）——回滚与合并.html">该系列中的上一篇文章</a>所述，我们可以知道普通的<code>rebase</code>主要是用来实现和分支合并（<code>merge</code>）非常相似的功能——将两个分支所有的提交点并入到一个分支上，只是语义上有所不同，<code>merge</code>更像是<strong>“把那条分支里‘我’没有的提交拿过来”</strong>；而<code>rebase</code>则像<strong>“‘我’把这条分支上的新提交基于那条分支里的最新提交来继续工作吧”</strong>！  </p>
+<p>据<a href="/blogpost/捋一捋git里那些操作近似的命令们儿之间的关系（一）——回滚与合并/捋一捋git里那些操作近似的命令们儿之间的关系（一）——回滚与合并.html">该系列中的上一篇文章</a>所述，我们可以知道普通的<code>rebase</code>主要是用来实现和分支合并（<code>merge</code>）非常相似的功能——将两个分支所有的提交点并入到一个分支上，只是语义上有所不同，<code>merge</code>更像是<strong>“把那条分支里‘我’没有的提交拿过来”</strong>；而<code>rebase</code>则像<strong>“‘我’把这条分支上的新提交基于那条分支里的最新提交来继续工作吧”</strong>！  </p>
 <p>但是交互式<code>rebase</code>不同，它实际也具有普通式<code>rebase</code>所包含的功能，但是如果我们仅仅只用交互式<code>rebase</code>来进行代码合并，也未免太屈才了。接下来来看看它真正能做的事情吧！  </p>
 <blockquote>
 <p>下述的图片中，当前所属分支会在分支名右侧有一个星号（*） </p>
