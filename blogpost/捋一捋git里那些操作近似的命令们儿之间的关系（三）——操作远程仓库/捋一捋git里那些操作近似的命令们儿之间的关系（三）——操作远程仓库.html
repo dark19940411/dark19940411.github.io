@@ -1,0 +1,139 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width" />
+    <link rel="stylesheet" href="../../assets/css/main.css">
+<link rel="stylesheet" href="../../libraries/font-awesome-4.7.0/css/font-awesome.min.css">
+
+<script src="../../assets/js/main.js"></script>
+    <title>捋一捋git里那些操作近似的命令们儿之间的关系（三）——操作远程仓库</title>
+</head>
+<body>
+<div class="social-media-menu">
+        <span class="social-media-menu-frontpage">
+            <a class="panel-social-jump-btn" href="../../" title="跳转至首页">
+                <i class="fa fa-list"></i>
+            </a>
+        </span>
+        <span class="social-media-menu-inner">
+            <a class="panel-social-jump-btn" href="https://github.com/dark19940411" target="_blank">
+                <i class="fa fa-github"></i>
+            </a>
+            <a class="panel-social-jump-btn" href="https://weibo.com/1950154683" target="_blank">
+                <i class="fa fa-weibo"></i>
+            </a>
+        </span>
+</div>
+
+<script type="text/javascript">var cnzz_protocol = (("https:" == document.location.protocol) ? " https://" : " http://");document.write(unescape("%3Cspan id='cnzz_stat_icon_1271332019'%3E%3C/span%3E%3Cscript src='" + cnzz_protocol + "s22.cnzz.com/z_stat.php%3Fid%3D1271332019%26show%3Dpic1' type='text/javascript'%3E%3C/script%3E"));</script>
+<script>document.getElementById('cnzz_stat_icon_1271332019').style.display = 'none';</script>
+
+<header class="main-panel">
+    <div class="main-panel-cover d-flex justify-content-center">
+        <div class="panel-info-flow-table d-flex align-content-center align-items-center justify-content-center flex-column">
+            <a href="../../" title="跳转至首页">
+                <img class="icon" src="../../assets/images/Icon.jpeg">
+            </a>
+            <div class="panel-name-label">Turtle</div>
+            <div class="panel-subtitle">虽然慢，但是我有在爬呀</div>
+            <hr class="panel-divider">
+            <a class="panel-navi-item" href="../../" title="跳转至首页">首页</a>
+            <div class="panel-social-container">
+                <a class="panel-social-jump-btn" href="https://github.com/dark19940411" target="_blank">
+                    <i class="fa fa-github fa-lg"></i>
+                </a>
+                <a class="panel-social-jump-btn" href="https://weibo.com/1950154683" target="_blank">
+                    <i class="fa fa-weibo fa-lg"></i>
+                </a>
+            </div>
+        </div>
+    </div>
+</header>
+<div class="content-container">
+    <div class="content-inner-wraper">
+        <header>
+            <time class="content-stamp">Mon May 21 2018 14:44:56</time>
+            <h1>捋一捋git里那些操作近似的命令们儿之间的关系（三）——操作远程仓库</h1>
+        </header>
+        <h2 id="pull-">pull命令详解</h2>
+<p>初看<code>pull</code>命令，当我们运行<code>git pull</code>的时候，似乎像是将当前本地分支所跟踪的远程分支的新内容下载至当前的本地分支上，而它有别于<code>fetch</code>，<code>git fetch</code>更像是刷新一下远端的分支的新提交信息，而并没有真正的下载所有的新内容。  </p>
+<p>但是实际上，并不是这样的。  </p>
+<p><code>git fetch</code>本身就是一个下载命令，但是<code>fetch</code>只会更新本地的远端分支，也就是诸如<code>origin/master</code>, <code>origin/feature</code>等带有远程仓库前缀的分支，所有的远端分支的引用信息被存在<code>.git/refs/remotes/</code>里，而这些分支本地的操作人是不带有写权限的，所以你不能<code>checkout</code>到它们之上，更无法在远端分支上进行<code>commit</code>, <code>merge</code>, <code>rebase</code>, <code>revert</code>, <code>reset</code>等带有“写”性质的操作。   </p>
+<p>尽管如此，远端分支也不仅仅只是一个仅有历史信息的列表，在它的提交历史里的所有提交对象它都包含，并且拥有每个提交最终所指向的内容，所以无论是新改动还是新文件，在本地运行<code>git fetch</code>命令以后，它们就已经被下载下来了，并非仅仅加载提交信息，在运行了<code>fetch</code>命令以后，我们可以再使用<code>merge</code>命令将任意的远程分支合并到当前分支来。  </p>
+<p><code>pull</code>命令的表现实际就是<code>fetch</code>命令和<code>merge</code>命令的集合。首先假设你当前在<code>master</code>分支上工作，并且该分支追踪着远端<code>origin</code>的<code>master</code>分支，直接运行<code>git pull</code>，<code>git</code>会首先利用<code>fetch</code>命令下载<code>origin</code>上的<code>master</code>分支的新提交，然后再用<code>git merge origin/master</code>命令来将新下载的提交合并到本地<code>master</code>分支上。  </p>
+<p>所以说，<code>git pull</code>并非唯一指定的下载命令，而是由<code>fetch</code>和<code>merge</code>命令结合组成的命令，<code>fetch</code>才是<code>git</code>里真正的<strong>下载</strong>命令。  </p>
+<p>但这也只是<code>git pull</code>的默认行为，可以通过加入参数<code>--rebase</code>来将<code>pull</code>的默认<code>merge</code>行为改成<code>rebase</code>。</p>
+<pre><code class="hljs undefined">git pull <span class="hljs-comment">--rebase</span></code></pre><h2 id="fetch-push-pull-">fetch、push、pull命令带参数时的用法与区别</h2>
+<h3 id="fetch">fetch</h3>
+<p><code>fetch</code>命令后面可以加上远端名，甚至可以指定分支。大概长这样：  </p>
+<pre><code class="hljs undefined"><span class="hljs-selector-tag">git</span> <span class="hljs-selector-tag">fetch</span> <span class="hljs-selector-attr">[remote name]</span> <span class="hljs-selector-attr">[[remote branch]</span><span class="hljs-selector-pseudo">:(local</span> <span class="hljs-selector-tag">branch</span>)]</code></pre><blockquote>
+<p>注：中括号内的参数是可选的，小括号内的参数是必填的</p>
+</blockquote>
+<p>如果你不指定远端的话，<code>fetch</code>会下载默认的远端上的所有的新的分支及提交到本地上；但如果你指定了远端的话，你还可以选择是否指定分支来进一步细化要让<code>git</code>去下载的内容。并且，如上命令所示，你甚至可以让非指定的本地分支所跟踪的远程分支的内容下载至你指定的本地分支上。并且，本地对应的远程分支不会有任何更新！  </p>
+<p>例子（虚线部分代表的是远端上的提交历史）：  </p>
+<pre><code class="hljs undefined">git fetch <span class="hljs-built_in">origin</span> master:<span class="hljs-built_in">feature</span></code></pre><p><img class="content-img" src="images/fetch-different-branches-existed.gif" alt="null"></p>
+<p>同时如果你指定了一条本地不存在的分支，那么<code>git</code>会先将这条本地分支创建出来，再将远端的指定分支的新内容下载到该分支上！  </p>
+<p>例子（虚线部分代表的是远端上的提交历史）：  </p>
+<pre><code class="hljs undefined">git fetch origin <span class="hljs-literal">master</span>:foo</code></pre><p><img class="content-img" src="images/fetch-different-branches-nexisted.gif" alt="null">
+（这个例子是先创建了本地<code>foo</code>分支，再将<code>origin</code>上的<code>master</code>分支下载至本地<code>foo</code>分支）  </p>
+<p>这个命令甚至可以不指定远端的分支名，像这样：  </p>
+<pre><code class="hljs undefined"><span class="hljs-selector-tag">git</span> <span class="hljs-selector-tag">fetch</span> <span class="hljs-selector-tag">origin</span> <span class="hljs-selector-pseudo">:bar</span></code></pre><p>它的作用很奇特，它不会执行任何的下载功能，它只会在本地创建一条<code>bar</code>分支（如果本地不存在<code>bar</code>的话）。  </p>
+<h3 id="push">push</h3>
+<p><code>push</code>命令也和<code>fetch</code>一样，带有指定远端和分支的额外功能，甚至连命令都是相似的，唯一不同的地方就是它们的方向不同，毕竟<code>fetch</code>是下载，而<code>push</code>是上传嘛！  </p>
+<pre><code class="hljs undefined"><span class="hljs-selector-tag">git</span> <span class="hljs-selector-tag">push</span> <span class="hljs-selector-attr">[remote name]</span> <span class="hljs-selector-attr">[[local branch]</span><span class="hljs-selector-pseudo">:(remote</span> <span class="hljs-selector-tag">branch</span>)]</code></pre><p>和<code>fetch</code>相似，该命令会将制定的本地分支的新内容上传到指定远端的指定分支上。当指定了一条远端不存在的分支的时候，<code>git</code>则会在远端先创建该分支，然后将本地分支的内容传输至远端的指定分支上；但是最奇特的是（也是与<code>fetch</code>完全不同的），如果不指定本地分支的话，<code>git</code>则会删除远端的指定分支！  </p>
+<pre><code class="hljs undefined">git <span class="hljs-built_in">push</span> <span class="hljs-built_in">origin</span> :master</code></pre><p>例如这个命令，是会导致远端的<code>master</code>分支被删除的！  </p>
+<h3 id="pull">pull</h3>
+<p><code>pull</code>命令也有如上形式的命令：  </p>
+<pre><code class="hljs undefined">git pull <span class="hljs-comment">[remote name]</span> <span class="hljs-comment">[<span class="hljs-comment">[remote branch]</span>: (local branch)]</span></code></pre><p>但是正如前面我所提到的那样，<code>pull</code>就是<code>fetch</code>和<code>merge</code>的组合。倘若你执行如下命令：  </p>
+<pre><code class="hljs undefined">git pull <span class="hljs-built_in">origin</span> master: <span class="hljs-built_in">feature</span></code></pre><p>就相当于：  </p>
+<pre><code class="hljs undefined">git fetch <span class="hljs-built_in">origin</span> master: <span class="hljs-built_in">feature</span> &amp; git merge <span class="hljs-built_in">feature</span></code></pre><p>也就是说，上述命令相当于将远端<code>origin</code>上的<code>master</code>分支的新内容下载至本地的<code>feature</code>分支，紧接着再将<code>feature</code>分支的内容合并到当前所在的分支。  </p>
+<p>而如若不指定远程分支，则该<code>pull</code>命令的表现和<code>fetch</code>是完全一致的，都是仅在当前<code>HEAD</code>引用所指向的commit创建一条对应名字的本地分支。</p>
+
+        <section class="content-readmore">
+            
+            
+                <div class="content-readmore-item">
+                    
+                    <span class="content-readmore-item-dim">更早的文章</span>
+                    <h2 class="post-title">
+                        <a href="../捋一捋git里那些操作近似的命令们儿之间的关系（二）——分支的高级操作/捋一捋git里那些操作近似的命令们儿之间的关系（二）——分支的高级操作.html" title="跳转至捋一捋git里那些操作近似的命令们儿之间的关系（二）——分支的高级操作">
+                            捋一捋git里那些操作近似的命令们儿之间的关系（二）——分支的高级操作
+                        </a>
+                    </h2>
+
+                    <p class="breviary">
+                        回顾了这个系列的上一篇文章，讲的是分支的合并与回滚操作之中，那些作用相似的命令。而在这篇里，则说几个用于分支上的高级操作，同样，他们之间也有着或多或少的相似性，容易混淆或者记错，在这里做下记录，并且对比他们的差异。  说到微调分支的历史，交互式rebase和cherry-pick无疑就是用于这个功能中的佼佼者，它们可以篡改分支的历史（毫无疑问），详细的说，它们能够遴选某个提交而舍弃不需要的提交，也可以更改提交的顺序。总之，如果能灵活运用的话，它们的功能是相当强大的。  交互式rebase在git……
+                    </p>
+                    <time class="content-stamp">Wed Apr 11 2018 23:22:57</time>
+                    <a href="../捋一捋git里那些操作近似的命令们儿之间的关系（二）——分支的高级操作/捋一捋git里那些操作近似的命令们儿之间的关系（二）——分支的高级操作.html" title="跳转至捋一捋git里那些操作近似的命令们儿之间的关系（二）——分支的高级操作" class="round-border-btn">继续阅读</a>
+                </div>
+            
+        </section>
+        <div id="disqus_thread"></div>
+        <script>
+
+            /**
+             *  RECOMMENDED CONFIGURATION VARIABLES: EDIT AND UNCOMMENT THE SECTION BELOW TO INSERT DYNAMIC VALUES FROM YOUR PLATFORM OR CMS.
+             *  LEARN WHY DEFINING THESE VARIABLES IS IMPORTANT: https://disqus.com/admin/universalcode/#configuration-variables*/
+
+            var disqus_config = function () {
+                var address = 'http://tech.imturtle.cn/blogpost/' + '捋一捋git里那些操作近似的命令们儿之间的关系（三）——操作远程仓库/' + '捋一捋git里那些操作近似的命令们儿之间的关系（三）——操作远程仓库.html';
+                this.page.url = address;  // Replace PAGE_URL with your page's canonical URL variable
+                this.page.identifier = address; // Replace PAGE_IDENTIFIER with your page's unique identifier variable
+            };
+
+            (function() { // DON'T EDIT BELOW THIS LINE
+                var d = document, s = d.createElement('script');
+                s.src = 'https://turtles-burrow.disqus.com/embed.js';
+                s.setAttribute('data-timestamp', +new Date());
+                (d.head || d.body).appendChild(s);
+            })();
+        </script>
+        <noscript>Please enable JavaScript to view the <a href="https://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+    </div>
+</div>
+<!-- Go to www.addthis.com/dashboard to customize your tools --> <script type="text/javascript" src="//s7.addthis.com/js/300/addthis_widget.js#pubid=ra-5a30e109c39d59b6"></script>
+
+</body>
+</html>
