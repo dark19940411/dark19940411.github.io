@@ -53,21 +53,21 @@
 <div class="content-container">
     <div class="content-inner-wraper">
         <header>
-            <time class="content-stamp">Mon Jun 12 2017 12:12:20</time>
+            <time class="content-stamp">Mon Jun 12 2017 12:12:20 GMT+0800 (中国标准时间)</time>
             <h1>RxSwift的学习之路（一）——Observable</h1>
         </header>
-        <h3 id="-">前言</h3>
-<p>最近在学习swift，看着喵神翻译的《Swift进阶》，一直看着颇感疲乏，于是想边学边实践来让自己不那么的犯困。毕竟纸上得来终觉浅嘛~所以我就顺手入了Raywenderlich上的RxSwift的书籍（这是一本好书，延续了Raywenderlich一贯的风格——讲课与动手相结合，每一章都有一个样例程序让你一步步跟着去实现，结尾还会有challenge）。并且，这也是我在简书的第一篇文章，主要是我的手提上的hexo挂了，挂在github上的博客也没法更新了，弄了两个星期都没弄好，没辙了。然而学习仍在继续，笔记也是要做的，所以就先来简书写写吧~</p>
+        <h3 id="前言">前言</h3>
+<p>最近在学习swift，看着喵神翻译的《Swift进阶》，一直看着颇感疲乏，于是想边学边实践来让自己不那么的犯困。毕竟纸上得来终觉浅嘛<del>所以我就顺手入了Raywenderlich上的RxSwift的书籍（这是一本好书，延续了Raywenderlich一贯的风格——讲课与动手相结合，每一章都有一个样例程序让你一步步跟着去实现，结尾还会有challenge）。并且，这也是我在简书的第一篇文章，主要是我的手提上的hexo挂了，挂在github上的博客也没法更新了，弄了两个星期都没弄好，没辙了。然而学习仍在继续，笔记也是要做的，所以就先来简书写写吧</del></p>
 <p>然后围绕着RxSwift这个主题，估计我会写上好几篇文章，基本上每个小的主题也都会跟着《RxSwift--Reactive Programming with Swift》这本书来，你也会看到很多这本书的影子。那么如果你没有这本书，通过我的文章来一窥RxSwift的究竟我想也是可以的，假如你有买这本书，在学习的路上有什么不懂的可以留言评论互相交流，如果你看到我的博客有什么不对的地方也希望指出改正！提前谢过！<br><img class="content-img" src="images/rxswiftbook.png" alt="null"></p>
-<h3 id="rxswift-">RxSwift简介</h3>
+<h3 id="rxswift简介">RxSwift简介</h3>
 <p>我对RxSwift的了解并不多，但就依我目前的了解，RxSwift主要是提供了一种在Swift语言下可以轻易写出响应式函数式的功能实现。主要就是方便了我们现在的多线程处理获取数据并进行处理的这么一个流程。说到后台获取数据，你的第一反应大概是<code>GCD</code>, <code>OperationQueue</code>, <code>Delegate</code>, <code>NotificationCenter</code>. 为此你不得不实现一些协议，写多几个方法，甚至要实现一些类。然而RxSwift和RxCocoa的出现让我们摆脱了这些。让你可以在无数的<code>.function()</code>调用函数中立即做出<em>对即将获取到的数据的处理</em>。而且它最基础的实现，源自于<code>Observable</code>，因为<code>Observable</code>就像一条数据流，当新的数据出现，它就会通知它的<code>Subscriber</code>去做对应的处理。总而言之，比起曾经你在<code>Cocoa Touch</code>上所用到的方式，使用RxSwift后，你会看到一片不一样的天地。  </p>
-<h3 id="rxswift-">RxSwift安装指南</h3>
+<h3 id="rxswift安装指南">RxSwift安装指南</h3>
 <p>详见<a href="https://github.com/ReactiveX/RxSwift">官网</a>  </p>
-<h3 id="-observable-">什么是Observable？</h3>
+<h3 id="什么是observable？">什么是Observable？</h3>
 <p><code>Observable</code>我也不知道中文怎么翻译，直译一下就是可观察的，但它通常都会被实例化，于是我称它为可观察的实例。<br>实质上，它就是一个<code>Sequence</code>（序列），序列分为有穷序列和无穷序列，主要就是用来形成一条数据流。说到有穷的数据流，我们不难想到通过网络来获取一张图片这一个过程，数据是有限的，图片下载完了，序列也就迎来闭合了；而说到无穷序列，一般就是我们对UI的监测可能是无穷的，比如某个手势、某次按钮的点击、横竖屏切换等等。  </p>
 <p>而你所有的操作产生的数据都会通过<code>Observable</code>传输——所以实质上<code>Observable</code>就是一条数据流。  </p>
 <p><img class="content-img" src="images/observable.png" alt="null">  </p>
-<h3 id="observable-">Observable的三种事件</h3>
+<h3 id="observable的三种事件">Observable的三种事件</h3>
 <p><code>Observable</code>里有三种事件——<code>next</code>, <code>completed</code>, <code>error</code>：</p>
 <ul>
 <li><code>next</code>事件主要是当<code>Observable</code>里出现新的数据时会发出的事件，同时该事件会携带新的数据对象。  </li>
@@ -75,7 +75,7 @@
 <li><code>error</code>事件是指当数据流遇到了错误会发出的事件，该事件也会导致<code>Observable</code>被终结。
 值得一提的是，被终结的<code>Observable</code>不会再有任何的事件发出。 </li>
 </ul>
-<h3 id="observable-">Observable如何创建？</h3>
+<h3 id="observable如何创建？">Observable如何创建？</h3>
 <h4 id="just-of-from">just, of, from</h4>
 <p><code>Observable</code>类自带三个方法来创建一个<code>Observable</code>实例，分别使用于不同的情况。of方法毫无疑问是最常用也最方便的一个方法。但是现在还是把每一个都做一个简单的介绍吧！  </p>
 <p><code>just</code>方法所创建出的<code>Observable</code>实例可以说是和just的字面意义非常的相近了，因为<code>just</code>仅能传入一个参数作为<code>Observable</code>内所包含的元素来创建一个实例。考虑以下代码片段：</p>
@@ -92,9 +92,9 @@
 <span class="hljs-keyword">let</span> variable2 = <span class="hljs-type">Observable</span>.of([one, two, three])</code></pre><p>回顾一下我之前说的，<code>Observable</code>实质上就是一条数据流，所有的创建方法所传入的参数都是这条数据流上的元素。上面的那段代码，对于<code>variable</code>变量而言，<code>one</code>, <code>two</code>, <code>three</code>就是里面的元素，对于<code>variable2</code>而言，数组<code>[one, two, three]</code>就是里面的元素。option+click一下，<code>variable</code>被推断成为<code>Observable&lt;Int&gt;</code>，<code>variable2</code>被推断成为<code>Observable&lt;[Int]&gt;</code>。这里为什么要看似多此一举的声明一个<code>variable2</code>呢？因为这和接下来的<code>from</code>方法有关系，为了理清楚两个创建方法的不同，就在这里先声明一个这样的变量先。   </p>
 <p><code>from</code>方法只接收数组作为参数，并抽取出数组里的元素来作为数据流中的元素。代码如下：</p>
 <pre><code class="hljs swift"><span class="hljs-keyword">let</span> variable = <span class="hljs-type">Observable</span>.from([<span class="hljs-number">1</span>, <span class="hljs-number">2</span>, <span class="hljs-number">3</span>])</code></pre><p>在这里，如果你用option+click去看<code>variable</code>的推断类型的话，你可以发现它的推断类型是<code>Observable&lt;Int&gt;</code>，和<code>of</code>不同的是，<code>of</code>创建的实例以数组作为元素；<code>from</code>则以<code>1</code>, <code>2</code>, <code>3</code>作为元素。  </p>
-<h4 id="range-">range方法</h4>
+<h4 id="range方法">range方法</h4>
 <p>利用<code>range</code>我们可以快速的创建一个包含一段范围内的正整数的数据流。它接受<code>start</code>和<code>count</code>作为参数来表示一段创建的范围。</p>
-<pre><code class="hljs swift"><span class="hljs-keyword">let</span> observable = <span class="hljs-type">Observable</span>&lt;<span class="hljs-type">Int</span>&gt;.range(start: <span class="hljs-number">1</span>, <span class="hljs-built_in">count</span>: <span class="hljs-number">10</span>)</code></pre><h4 id="empty-">empty()——创建一个空的可观察的实例</h4>
+<pre><code class="hljs swift"><span class="hljs-keyword">let</span> observable = <span class="hljs-type">Observable</span>&lt;<span class="hljs-type">Int</span>&gt;.range(start: <span class="hljs-number">1</span>, <span class="hljs-built_in">count</span>: <span class="hljs-number">10</span>)</code></pre><h4 id="empty创建一个空的可观察的实例">empty()——创建一个空的可观察的实例</h4>
 <p>为了让接下来的创建方法更加地容易理解，我不得不把稍后才会讲到订阅（subscribe）方法提前使用，但是我相信你能看懂，至于详尽的使用方式，就见下文吧！<br><code>empty()</code>方法主要是创建了一个空的数据流，里面没有任何的元素，所以它不会发出任何的<code>next</code>事件，它只会发出一个<code>completed</code>事件，然后终结。还有一点是，没有被订阅的<code>Observable</code>实例并不会发出任何事件，也不会终结，所以你看到上面所创建的数据流，其中的数据也并没有被处理。<br>直到订阅者出现，数据流就会开始向订阅者发送事件了！  </p>
 <pre><code class="hljs swift"><span class="hljs-keyword">let</span> observable = <span class="hljs-type">Observable</span>&lt;<span class="hljs-type">Void</span>&gt;.empty()
 
@@ -110,7 +110,7 @@ observable
 输出：
 completed
 */</span></code></pre><p>这段代码首先用<code>empty()</code>创建了一个不含元素的<code>Observable&lt;Void&gt;</code>实例，然后订阅了这个实例的<code>next</code>事件和<code>completed</code>事件，由于这条数据流不含任何元素，所以它直接向订阅者发送了一个<code>completed</code>事件然后就终结了。  </p>
-<h4 id="never-">never()——创建一个代表无尽时长的数据流</h4>
+<h4 id="never创建一个代表无尽时长的数据流">never()——创建一个代表无尽时长的数据流</h4>
 <p><code>never()</code>方法创建了一个不会发出任何事件也不会终结的<code>Observable</code>实例，尽管如此，它也可以代表一段无限（相对无限）的时长。但是，如果它不能发出任何事件，那又有什么用呢？其实它可以配合<code>do</code>方法来做一些工作，它还可以被<code>subscribe</code>到<code>dispose</code>“事件”，来判断在当前的环境下，never()是什么时候被回收的。当然，<code>dispose</code>和<code>do</code>目前都没有介绍，详情见下文。  </p>
 <h3 id="subscribe">Subscribe</h3>
 <p>订阅一个<code>Observable</code>实例主要有两个方法，talk is cheap, show you the code.</p>
@@ -136,7 +136,7 @@ completed
 2
 3
 */</span></code></pre><p>这段代码里用了两个方法来<code>subscribe</code>一个<code>Observable</code>对象，方法1直接<code>subscribe</code>了所有的事件，在回调的block里获取到的参数就是事件本身；而方法2则提供了几个可选的参数比如<code>onNext</code>, <code>onError</code>, <code>onCompleted</code>, <code>onDisposed</code>来订阅到不同的事件，而我提供的样例里订阅的是<code>next</code>事件。<code>next</code>事件的回调block会传入当前<code>next</code>事件所携带的元素。  </p>
-<h3 id="dispose-disposebag-">dispose和DisposeBag——让订阅者释放</h3>
+<h3 id="dispose和disposebag让订阅者释放">dispose和DisposeBag——让订阅者释放</h3>
 <p>如果你足够细心的话，你会发现每次<code>subscribe</code>方法调用后都会返回一个<code>Disposable</code>对象，代表着每一次订阅都是需要被释放的，遗憾的是，这并不由ARC进行管理，而是由RxSwift来管理。然而，RxSwift也没有提供自动释放的机制，始终是需要你手动释放的。  </p>
 <p>一种方法是调用<code>Disposable</code>的<code>dispose()</code>方法。</p>
 <pre><code class="hljs swift"><span class="hljs-keyword">let</span> observable = <span class="hljs-type">Observable</span>.of(<span class="hljs-string">"A"</span>, <span class="hljs-string">"B"</span>, <span class="hljs-string">"C"</span>)
@@ -171,7 +171,7 @@ next(A)
 next(B)
 next(C)
 completed</span></code></pre><p>实际上，从上面两段的代码我们可以看出来，虽然<code>subscribe</code>可以订阅到一次订阅被释放时的<code>disposed</code>&quot;事件&quot;，是的，我这里打了双引号，因为它和<code>next</code>, <code>error</code>, <code>completed</code>不一样。从第二段代码来看就很明了了，并没有打印出<code>disposed</code>相关的事件。</p>
-<h3 id="create-">create——创建一条可自定义事件的数据流</h3>
+<h3 id="create创建一条可自定义事件的数据流">create——创建一条可自定义事件的数据流</h3>
 <p><code>create</code>嘛，功能就像标题说的那样，创建一个<code>Observable</code>对象，但是里面的事件可以有你来自定义。</p>
 <pre><code class="hljs swift"><span class="hljs-class"><span class="hljs-keyword">enum</span> <span class="hljs-title">MyError</span>: <span class="hljs-title">Error</span> </span>{
     <span class="hljs-keyword">case</span> anError
@@ -204,7 +204,7 @@ completed</span></code></pre><p>实际上，从上面两段的代码我们可以
 anError
 Disposed
 */</span></code></pre><p>正如代码所示，上面的<code>create</code>为一个<code>observer</code>添加了<code>next</code>, <code>error</code>, <code>completed</code>, <code>next</code>事件，但是很显然它输出到<code>error</code>事件就终结了，后面的事件也不会再发出。<br>如果你想的话，你可以标注或者移位上面的代码，来看看不同的输出。  </p>
-<h3 id="deferred-observable-">deferred——创建一个可以生成不同的Observable对象的工厂</h3>
+<h3 id="deferred创建一个可以生成不同的observable对象的工厂">deferred——创建一个可以生成不同的Observable对象的工厂</h3>
 <p><code>deferred</code>就是一个<code>Observable</code>的工厂，你可以在里面定制几条不同的数据流，从而提供给外部不同的订阅，代码如下：  </p>
 <pre><code class="hljs swift"><span class="hljs-keyword">let</span> disposeBag = <span class="hljs-type">DisposeBag</span>()
 
@@ -251,7 +251,7 @@ Disposed
                     <p class="breviary">
                         最近比较忙，更新得有点慢，望谅解。上一章我介绍了Observable——一个功能就像一条数据流的类。这一章的内容比较简单，Subject和Observable还是挺相似的，如果说Observable是专门用来被订阅获取数据的一个“被动”的类，那么比起Observable，Subject倒是占据了一点主动。  它可以作为一个被订阅者供给外部订阅，也可以作为一个观察者，接收事件，然后发出给订阅者。所以它要比Obsavable更加的灵活一点，按照我的理解，它应该是一种支持一边接收事件，一边接收订阅者的……
                     </p>
-                    <time class="content-stamp">Tue Jun 27 2017 10:04:43</time>
+                    <time class="content-stamp">Tue Jun 27 2017 10:04:43 GMT+0800 (中国标准时间)</time>
                     <a href="../RxSwift的学习之路（二）——Subjects/RxSwift的学习之路（二）——Subjects.html" title="跳转至RxSwift的学习之路（二）——Subjects" class="round-border-btn">继续阅读</a>
                 </div>
             
@@ -268,7 +268,7 @@ Disposed
                     <p class="breviary">
                         最近在实现一个需求，为了使代码看起来更干净整洁，我给CALayer写了一个category，里面有一个animationDelegate的weak属性，由于layer的释放时间要比animationDelegate晚，所以animationDelegate得有在内存回收时自动置nil的的功能。然而，用过category创建属性的我们都知道，category创建的属性的setter和getter都只能是动态生成的(@dynamic)的，并且在category里我们不能添加ivar，所以只能通过ru……
                     </p>
-                    <time class="content-stamp">Mon Apr 17 2017 17:24:45</time>
+                    <time class="content-stamp">Mon Apr 17 2017 17:24:45 GMT+0800 (中国标准时间)</time>
                     <a href="../如何在category里创建一个weak属性？/如何在category里创建一个weak属性？.html" title="跳转至如何在category里创建一个weak属性？" class="round-border-btn">继续阅读</a>
                 </div>
             

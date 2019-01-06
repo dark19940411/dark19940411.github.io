@@ -53,13 +53,13 @@
 <div class="content-container">
     <div class="content-inner-wraper">
         <header>
-            <time class="content-stamp">Fri Oct 21 2016 19:48:38</time>
+            <time class="content-stamp">Fri Oct 21 2016 19:48:38 GMT+0800 (中国标准时间)</time>
             <h1>单例猛如虎，请小心使用</h1>
         </header>
         <p>单例模式是一个在iOS里面备受使用的设计模式。但是我们在尽情使用它的时候，一定要注意到它其实也有很多隐含的问题。
 其实这篇文章也相当于看了objcio上的<a href="https://objccn.io/issue-13-2/">避免滥用单例</a>的一篇总结。
 结合自己最近开发的心得，来讲一下单例的一些利与弊吧。</p>
-<h2 id="-">创建方式</h2>
+<h2 id="创建方式">创建方式</h2>
 <p>首先单例最原始的创建方式就是</p>
 <pre><code class="hljs objc"><span class="hljs-keyword">static</span> sharedInstance = <span class="hljs-literal">nil</span>;
 <span class="hljs-class"><span class="hljs-keyword">@implementation</span> <span class="hljs-title">Singleton</span></span>
@@ -93,7 +93,7 @@
     <span class="hljs-keyword">return</span> sharedInstance;
 }
 <span class="hljs-keyword">@end</span></code></pre><p>没有异步问题，没有锁的访问，然后怎么样？完美。<br>但是现在，我们还有一个棘手的问题需要解决，我们需要屏蔽掉单例的其他初始化方式，因为我们总不想我们写好的一个单例最后还可以通过<code>alloc] init</code>的方式被初始化吧？下面我将介绍两种办法，皆是参考<a href="http://www.jianshu.com/p/7486ebfcd93b">这篇文章</a>的。</p>
-<h3 id="-init-throw-exception-">第一种——将init用断言或者throw exception的方式给屏蔽了</h3>
+<h3 id="第一种将init用断言或者throw-exception的方式给屏蔽了">第一种——将init用断言或者throw exception的方式给屏蔽了</h3>
 <p>上代码：</p>
 <pre><code class="hljs objc"><span class="hljs-keyword">static</span> sharedInstance = <span class="hljs-literal">nil</span>;
 <span class="hljs-class"><span class="hljs-keyword">@implementation</span> <span class="hljs-title">Singleton</span></span>
@@ -121,7 +121,7 @@
         <span class="hljs-keyword">return</span> <span class="hljs-keyword">self</span>;
     }
     <span class="hljs-keyword">@end</span></code></pre><p>第一种，就是简单粗暴的禁止外部调用[[Singleton alloc] init]来产生额外的实例，这也是我最喜欢的一种方式，原因等介绍完第二种方法以后再说。</p>
-<h3 id="-allocwithzone-copywithzone-">第二种——重写+allocWithZone: 和-copyWithZone方法确保其它创建方式无法创建新的实例</h3>
+<h3 id="第二种重写allocwithzone-和-copywithzone方法确保其它创建方式无法创建新的实例">第二种——重写+allocWithZone: 和-copyWithZone方法确保其它创建方式无法创建新的实例</h3>
 <p>上代码：</p>
 <pre><code class="hljs objc"><span class="hljs-keyword">static</span> Singleton * _instance;
 <span class="hljs-class"><span class="hljs-keyword">@implementation</span> <span class="hljs-title">Singleton</span></span>
@@ -145,13 +145,13 @@
     <span class="hljs-keyword">return</span> _instance;
 }
 <span class="hljs-keyword">@end</span></code></pre><p>这样子写确保了外部调用+sharedInstance、alloc-init、-copy三种方法来获取Singleton的实例都会获取到同一个实例。但是我并不喜欢这种创建方式。原因就是第一种写法限制来外部只能通过sharedInstance的方式来获取单例，而第二种可以通过alloc-init的方式来获取实例的话就会和其他非单例类混在一起，尽管它本质是单例，但是你不觉得外表看起来也像是个单例会更好吗？而且这样子写代码也更加清晰。  </p>
-<h2 id="-">优点</h2>
+<h2 id="优点">优点</h2>
 <p>总结为两点：</p>
 <ul>
 <li>因为限制了实例数量，可以节省内存空间。</li>
 <li>为全局访问提供了一个入口，单例本身就相当于一个全局变量（这个其实也是缺点）</li>
 </ul>
-<h2 id="-">缺点</h2>
+<h2 id="缺点">缺点</h2>
 <p>草草略过了单例的优点，我们来看看单例模式下的那些坑吧！  </p>
 <ol>
 <li><p>作为程序员，我们都应该拒绝全局变量，然而单例模式实际上就是一个全局变量。对于单例，在全局区域内，假如有异步的调用了单例的话，就很可能出现问题——譬如两条线程同时对一个单例的内部数据进行修改的话，这样就很可能会导致数据出错。</p>
@@ -179,7 +179,7 @@
                     <p class="breviary">
                         这个问题困扰了我许久了，于是今天我决定终结这个疑惑。我谷歌了一下这个问题，于是在stackOverflow上看到了不同的答案，其中一个回答是说WWDC2015中的一个视频“Implementing UI Designs in Interface Builder”里的Apple工程师是这么说的：  And the last option I want to point out is the storage type, which can either be strong or weak. In g……
                     </p>
-                    <time class="content-stamp">Wed Dec 07 2016 19:50:59</time>
+                    <time class="content-stamp">Wed Dec 07 2016 19:50:59 GMT+0800 (中国标准时间)</time>
                     <a href="../IBOutlet为什么默认是weak的？到底应该设置成strong还是weak？/IBOutlet为什么默认是weak的？到底应该设置成strong还是weak？.html" title="跳转至IBOutlet为什么默认是weak的？到底应该设置成strong还是weak？" class="round-border-btn">继续阅读</a>
                 </div>
             
@@ -196,7 +196,7 @@
                     <p class="breviary">
                         最近在看ASDK（AsyncDisplayKit）源码的时候看到了ASDK写了一个ASDisplayNode的extension，里面声明了一堆ivar，然后又在各种ivar之前加入了@package、@protected、@public的字段，出于好奇它的作用，我先去查了一下这四种关键字的意义，如下：  当extension声明在.h或者声明在.m中，里面ivar的作用域是不同的。而如果extension是声明在.m文件里的，无论如何在这个.m以外，都无法获取到这个extension里变量。（……
                     </p>
-                    <time class="content-stamp">Wed Sep 28 2016 22:11:33</time>
+                    <time class="content-stamp">Wed Sep 28 2016 22:11:33 GMT+0800 (中国标准时间)</time>
                     <a href="../用@package、@public、@private、@protected关键字改写extension里ivar的访问权限/用@package、@public、@private、@protected关键字改写extension里ivar的访问权限.html" title="跳转至用@package、@public、@private、@protected关键字改写extension里ivar的访问权限" class="round-border-btn">继续阅读</a>
                 </div>
             

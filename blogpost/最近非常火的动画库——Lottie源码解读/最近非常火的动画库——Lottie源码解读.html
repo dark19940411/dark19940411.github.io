@@ -53,19 +53,19 @@
 <div class="content-container">
     <div class="content-inner-wraper">
         <header>
-            <time class="content-stamp">Mon Feb 27 2017 01:39:59</time>
+            <time class="content-stamp">Mon Feb 27 2017 01:39:59 GMT+0800 (中国标准时间)</time>
             <h1>最近非常火的动画库——Lottie源码解读</h1>
         </header>
         <p>Yep，finally，eventually，迎来了我的第一篇源码解读类的文章。相比之前粗略看过的ASDK，Lottie可谓是<strong>对开发者来说十分之不友好</strong>——因为几乎没有注释，本文作为自己的学习记录，也给大家参考。</p>
-<h3 id="-lottie-demo-">从Lottie的官方Demo讲起</h3>
+<h3 id="从lottie的官方demo讲起">从Lottie的官方Demo讲起</h3>
 <p>Lottie的<a href="https://github.com/airbnb/lottie-ios">官方Demo</a>的一开始是一个很酷炫的header，以及一个只有三行的tableView：<br><img class="content-img" src="images/Lottie1.gif" alt="null"><br>从每一行里点进去就发现第二个是一个打字相关的动画（显然作者把A-Z的字母显示都用AfterEffects做了一套动画用在了这里），第三行则是一个页面切换的动画。第一行里则是一个让你浏览整个demo里用到的动画的view——这里的动画甚至不是播放的，而是可以自己拖动进度条来带动变化。在第一第二行对应的demo里着重用到了lottie里的一个类——LOTAnimationView来显示动画，而在Animated Transition Demo中则是着重使用LOTAnimationTransitionController，跳到LOTAnimationTransitionController里看一看，原来这个controller不过是一个实现了<code>&lt;UIViewControllerAnimatedTransitioning&gt;</code>协议，结合LOTAnimationView来实现页面动画切换的一个类而已。  </p>
 <p>所以，非常明显，Lottie始于LOTAnimationView。  </p>
 <p>在我们开始进一步地阅读Lottie的源码之前，我们必须得搞明白Lottie总的来说干了什么，还有我写这篇文章的目的是什么。首先Lottie的作用就是你输入一个由AE制作的动画再由其插件bodymovin转成的JSON，然后Lottie就将里面的动画添加到LOTAnimationView之上并返还给你。<br><img class="content-img" src="images/Lottie主线.png" alt="null"><br>都说阅读源码就像拼图，一块块的找到缺失的拼图块，最后把拼图完成，你也就读懂了这个源码，而这幅示意图就是拼图的主线。所以现在我们知道，Lottie干了两件事——接收JSON文件解析获得数据，并把数据用来生成动画并最后返回给你一个可视的view。而这篇文章的目的，是要告诉你它是怎么获得数据的，获得了哪些数据，怎么封装的，还有整个项目的结构以及它用到的核心技术。Lottie生成动画的核心技术是使用了苹果的动画库Core Animation，但是由于我才疏学浅，对Core Animation了解不深，所以也是边查边阅读的源码，如有理解上的错误还望指出纠正。</p>
 <p>那么，正文开始。哦还有，本文解析的是Lottie-iOS，如果想看别的版本的解析，请移步别处，并且Lottie里关于Mac OS的部分，只会有少量的解释甚至不解释。</p>
-<h3 id="-lotanimationview-">从LOTAnimationView的初始化讲起</h3>
+<h3 id="从lotanimationview的初始化讲起">从LOTAnimationView的初始化讲起</h3>
 <p>看到源码，我们可以发现LOTAnimationView继承自LOTView，LOTView实际上只是个一个换名的类，对于iOS而言LOTView就是UIView，对于MacOS而言，就是NSView，显然它是为了适配Mac而存在的。
 打开LOTAnimationView.m，看到类方法：<br><code>+ (instancetype)animationNamed:(NSString *)animationName</code><br>这毕竟是一个专门用来初始化的工厂方法，很好用来作为开始，代码也很好懂，animationName就是JSON文件对应的名字，方法最开始先取出文件的名字，然后从LOTAnimationCache里取出LOTComposition的缓存，先将后者放到一边，结合<a href="https://github.com/airbnb/lottie-ios">官方文档</a>所提到的<strong>LRU缓存策略</strong>，我们来讲讲LOTAnimationCache。  </p>
-<h4 id="lru-least-recently-used-lotanimationcache">LRU（Least Recently Used）——LOTAnimationCache</h4>
+<h4 id="lru（least-recently-used）lotanimationcache">LRU（Least Recently Used）——LOTAnimationCache</h4>
 <p>打开LOTAnimationCache.h，可以看到这是一个单例，还有简单的存取方法。下移一格，来到LOTAnimationCache.m，我们可以看到它只有两个ivar，一个<code>NSMutableDictionary *animationsCache_</code>和一个<code>NSMutableArray *lruOrderArray_</code>。如果你学过操作系统，你就知道<a href="https://en.wikipedia.org/wiki/Cache_replacement_policies#LRU">LRU算法</a>是一种淘汰最近最少使用的项目的算法。而LOTAnimationCache的字典用来存放&lt;动画名，LOTComposition&gt;的数据，而lruOrderArray_则是维持了一个lru序列，里面全是动画名。  </p>
 <pre><code class="hljs objc">- (<span class="hljs-keyword">void</span>)addAnimation:(LOTComposition *)animation forKey:(<span class="hljs-built_in">NSString</span> *)key {
     <span class="hljs-keyword">if</span> (lruOrderArray_.count &gt;= <span class="hljs-number">50</span>) {
@@ -77,7 +77,7 @@
     [lruOrderArray_ addObject:key];
     [animationsCache_ setObject:animation forKey:key];
 }</code></pre><p>从代码来看，缓存最多存储50个动画，最近使用的动画放在lru序列的最末端，最少使用的放在序列的开始，便于淘汰。简简单单50多行代码，便实现了一个LRU缓存，存储的对象还可以是各种酷炫的动画，实在是太简洁了。但是之所以这个cache可以这么简洁，也是因为动画的数据早已被完整地封装在了LOTComposition里了。  </p>
-<h3 id="-lotcomposition-lotlayer">核心数据层——LOTComposition和LOTLayer</h3>
+<h3 id="核心数据层lotcomposition和lotlayer">核心数据层——LOTComposition和LOTLayer</h3>
 <p>从项目的结构上看，LOTComposition放在Models文件夹下，那么它是一个数据层。其次它被用来直接初始化LOTAnimationView(<code>- (instancetype)initWithModel:(LOTComposition *)model</code>)，而且cache存放的对象就是它，所以它代表着一个动画的数据。让我们看看LOTComposition都有些什么样的属性，看看一个完整的动画都需要哪些数据。composition有一个装了多个LOTLayer的数组，还有一些属性，分别代表动画区域、开始／结束帧、帧率、动画时长。所有的这些数据，都源于对JSON文件的解析，然后特定的属性对应了一些特定的key，这些都是bodymovin约定好了的，知道这些key就可以获取到对应的数据，这些从LOTComposition的实现就可以看出来。<br>在LOTComposition的属性里，其他的都很好理解，只有一个<br><code>@property (nonatomic, readonly) NSArray &lt;LOTLayer *&gt; *layers</code><br>让人不能一眼看明白。LOTLayer一开始让我也非常困惑，它看起来似乎像是CALayer的子类，而且看起来它是实现动画了的地方。实则不然，它依然存放在models文件夹下，而且它继承自NSObject，所以说，这依然是一个数据类，而它存放的则是一个图层的动画所需要的数据。而一个复杂的动画可能会由多个layer的动画组合而成，这就是为什么composition里面会有一个装了多个LOTLayer的数组。至于LOTLayer里有些什么数据，又是干什么的，我这里先不说，请接着往下看。  </p>
 <p>来到+animationNamed：的最后一行，我们看到调用了<code>-initWithModel:</code>初始化函数。为了方便大家理解LOTAnimationView的初始化干了什么，下面贴上带有我的注释的<code>-initWithModel:</code>：    </p>
 <pre><code class="hljs objc">- (<span class="hljs-keyword">instancetype</span>)initWithModel:(LOTComposition *)model {
@@ -134,7 +134,7 @@
   _layerMap = layerMap;
   _layerNameMap = layerNameMap;
 }</code></pre><p>看了上面的代码，我想你应该明白了LOTAnimationView是如何控制好数据层和动画层的关系，而且上面也引入了一个重要的类——LOTLayerView——它本质上是一个CALayer，也是真正运用了动画的地方。那么在LOTLayerView里一定也有许多有趣的动画技术等着我们去了解，但在我们更加深入之前，我们得理清一下我们现在所接触到的类以及它们的关系。<br><img class="content-img" src="images/Lottie-chaos.jpg" alt="null"><br>一直看着代码和文字解释一定让人头昏脑胀，现在让我贴上一张关系示意图：<br><img class="content-img" src="images/LOTAnimationView里的动画层和数据层关系图.png" alt="null"><br>从图中来看，下半部分是一个整合了所有动画图层的view和所有的动画图层LOTLayerView，上半部分则是两个数据大头LOTComposition和LOTLayer。外部数据JSON从LOTAnimationView中流入，被解析进入到LOTComposition和LOTLayer里，最后LOTAnimationView再利用解析好的LOTLayer初始化所有的图层LOTLayerView并添加到自己的CALayer容器里，那么一个从AE里导出的动画就生成了。  </p>
-<h3 id="-lotlayerview">动画层——LOTLayerView</h3>
+<h3 id="动画层lotlayerview">动画层——LOTLayerView</h3>
 <p>LOTLayerView，我们依然从它的初始化方法看起。<br><code>-initWithModel:inComposition:</code>没啥特别，存储两份数据到ivar里，然后开始配置自身。来看<code>-(void)_setupViewFromModel</code>，这个方法非常长，我试着在能解释清它是什么的基础上尽量删减。</p>
 <pre><code class="hljs objc">    - (<span class="hljs-keyword">void</span>)_setupViewFromModel {
   <span class="hljs-comment">//省略代码，配置自身基本属性</span>
@@ -257,10 +257,10 @@ In after effects you can parent a layer to another layer. Though they call it pa
   <span class="hljs-comment">//省略一段关于淡入淡出动画的代码</span>
 }</code></pre><p>Lottie最终使用了CAKeyframeAnimation来生成动画。而我们知道CAKeyframeAnimation被用于CALayer之上，是一种用keypath来生成的动画。这个_build方法的开头就给出一个塞入了keypath的字典，@&quot;opacity&quot;用来控制layer的透明度变化、@&quot;position&quot;用来控制layer的位置变化……如此类推。但是值得注意的是这个字典里的value全都是AnimatableProperties文件夹下的类，而这些properties都有个特征，就是它们都遵循于<code>&lt;LOTAnimatableValue&gt;</code>协议，满足这个协议使得这些property必须具有从数据转换成CAKeyframeAnimation的能力。  </p>
 <p>了解了这些，接着让我们来看Lottie里的一个CAAnimationGroup的类别，里面有一个方法:<br><code>+ (nullable CAAnimationGroup *)LOT_animationGroupForAnimatablePropertiesWithKeyPaths:(nonnull NSDictionary&lt;NSString *, id&lt;LOTAnimatableValue&gt;&gt; *)properties;</code><br>也是上面代码块中被用来生成_animation的方法。这个方法通过将LOTLayer下的animatableProperties转化成一个个CAKeyframeAnimation并将它们加到一个CAAnimationGroup里，最后返还结果。这个方法就是将数据变成动画的方法。那么layer有了，动画有了，Lottie也完成了。  </p>
-<h3 id="-lottie-">最后，我们来讲讲Lottie的设计模式</h3>
-<h4 id="-">迅速将数据转换为动画的统一接口模式</h4>
+<h3 id="最后，我们来讲讲lottie的设计模式">最后，我们来讲讲Lottie的设计模式</h3>
+<h4 id="迅速将数据转换为动画的统一接口模式">迅速将数据转换为动画的统一接口模式</h4>
 <p>先来讲讲Lottie里一个比较有趣的设计模式——AnimatableProperties文件夹下的所有类都遵循于<code>&lt;LOTAnimatableValue&gt;</code>，实现其中的<code>-(CAKeyframeAnimation *)animationForKeypath:(NSString *)keypath</code>便于方便和快速地将数据转化为CAKeyframeAnimation。<br><img class="content-img" src="images/Lottie——AnimatableProperties设计模式.png" alt="null">  </p>
-<h4 id="lottie-">Lottie的整体架构</h4>
+<h4 id="lottie的整体架构">Lottie的整体架构</h4>
 <p>由于涉及到的类众多，而Lottie也用文件夹区分好了这些类，那我在介绍Lottie的整体架构的时候就不用类名而用Lottie的文件夹名来做解释吧。首先，JSON从LOTAnimationView进入（这里没办法，文件夹名没很好的表达出这个类的意思）。然后进入到Models解析并存储，紧接着利用Models初始化AnimatableLayers，AnimatableLayers在初始化过程中利用传入的Models里的AnimatableProperties生成CAKeyframeAnimation添加到自身之上，最后返还给LOTAnimationView，这就是整个Lottie的运作机制。  </p>
 <p>上个整体架构图：<br><img class="content-img" src="images/Lottie整体架构图.png" alt="null"><br>那么，拼图完整了，Lottie解读完毕！</p>
 
@@ -278,7 +278,7 @@ In after effects you can parent a layer to another layer. Though they call it pa
                     <p class="breviary">
                         这是一篇记录踩坑的文章，而不是教程，所以如果你打算用这篇文章开启你ShareExtension世界的大门，那么你来错地方了。但是如果你已经对ShareExtension有所了解，打算开发一个ShareExtension，那这篇文章所提到的内容将有可能对你有所帮助。假如你写过ShareExtension，那么你知道一段从extension里获取所选文件的过程可能长这样：从代码里可以看到，为了取到数据，我嵌套遍历了很多重。你要在share extension里面获取到用户所选取的文件，你得通过sel……
                     </p>
-                    <time class="content-stamp">Fri Apr 07 2017 20:07:46</time>
+                    <time class="content-stamp">Fri Apr 07 2017 20:07:46 GMT+0800 (中国标准时间)</time>
                     <a href="../ShareExtension踩坑过程全记录/ShareExtension踩坑过程全记录.html" title="跳转至ShareExtension踩坑过程全记录" class="round-border-btn">继续阅读</a>
                 </div>
             
@@ -295,7 +295,7 @@ In after effects you can parent a layer to another layer. Though they call it pa
                     <p class="breviary">
                         这个问题困扰了我许久了，于是今天我决定终结这个疑惑。我谷歌了一下这个问题，于是在stackOverflow上看到了不同的答案，其中一个回答是说WWDC2015中的一个视频“Implementing UI Designs in Interface Builder”里的Apple工程师是这么说的：  And the last option I want to point out is the storage type, which can either be strong or weak. In g……
                     </p>
-                    <time class="content-stamp">Wed Dec 07 2016 19:50:59</time>
+                    <time class="content-stamp">Wed Dec 07 2016 19:50:59 GMT+0800 (中国标准时间)</time>
                     <a href="../IBOutlet为什么默认是weak的？到底应该设置成strong还是weak？/IBOutlet为什么默认是weak的？到底应该设置成strong还是weak？.html" title="跳转至IBOutlet为什么默认是weak的？到底应该设置成strong还是weak？" class="round-border-btn">继续阅读</a>
                 </div>
             

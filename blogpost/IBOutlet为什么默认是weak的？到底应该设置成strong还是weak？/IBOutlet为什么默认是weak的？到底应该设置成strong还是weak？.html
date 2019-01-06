@@ -53,7 +53,7 @@
 <div class="content-container">
     <div class="content-inner-wraper">
         <header>
-            <time class="content-stamp">Wed Dec 07 2016 19:50:59</time>
+            <time class="content-stamp">Wed Dec 07 2016 19:50:59 GMT+0800 (中国标准时间)</time>
             <h1>IBOutlet为什么默认是weak的？到底应该设置成strong还是weak？</h1>
         </header>
         <p>这个问题困扰了我许久了，于是今天我决定终结这个疑惑。<br>我谷歌了一下这个问题，于是在stackOverflow上看到了不同的答案，其中一个回答是说WWDC2015中的一个视频“Implementing UI Designs in Interface Builder”里的Apple工程师是这么说的：  </p>
@@ -64,9 +64,13 @@
 <p>然后我又跑去看了<a href="https://developer.apple.com/library/content/documentation/Cocoa/Conceptual/LoadingResources/CocoaNibs/CocoaNibs.html#//apple_ref/doc/uid/10000051i-CH4-SW6">官方Nib Files的文档</a>,上面是这么说的：</p>
 <blockquote>
 <p>From a practical perspective, in iOS and OS X outlets should be defined as declared properties. Outlets should generally be weak, except for those from File’s Owner to top-level objects in a nib file (or, in iOS, a storyboard scene) which should be strong. Outlets that you create should therefore typically be weak, because:</p>
+</blockquote>
+<blockquote>
 <ul>
 <li>Outlets that you create to subviews of a view controller’s view or a window controller’s window, for example, are arbitrary references between objects that do not imply ownership.  </li>
 </ul>
+</blockquote>
+<blockquote>
 <ul>
 <li>The strong outlets are frequently specified by framework classes (for example, UIViewController’s view outlet, or NSWindowController’s window outlet).  </li>
 </ul>
@@ -95,9 +99,9 @@
 <p>让我们来看看结果：<br><img class="content-img" src="images/littleExperimentsResult.png" alt="null"><br>So[冷漠脸], What the f**k is that? 讲道理这个outlet不是应该一初始化就会被释放了吗？为什么？？？无法理解啊<br>而在拖取这个outlet的时候默认引用属性也像意料之中的变成了strong，但是为什么结果却是这样子的啊？
 好吧，到了这里我已经没辙了。我这个model并不是一个视图型的对象，所以它必然不会被视图层级引用，因此它理应只会被controller所引用啊。而在我仅在controller内设置了一个weak的model的outlet情况下，model竟然还是不会释放。对于这个问题，我并不想再深究下去，有兴趣的人可以继续挖掘。我认为的原因是——<strong>在controller从storyboard里生成的时候，系统会以runtime的形式创建它的属性并将强引用绑定到controller上，以此防止神奇的开发者将顶层对象的弱引用拖入到controller时而出乎意料的释放。</strong>（这一段话都挺绕的，希望你有看懂）  </p>
 <hr>
-<p>最后第三个问题。<br><strong>猜想：</strong> 接上一个问题的实验。我们都知道ViewController里有一个Model对象了，假如Model里面有一个对ViewController的强引用（危险动作，请勿模仿），那这个Model在ViewController里的引用就必须是弱引用，否则就会引起循环引用而内存泄漏了。<br>然而事实真的是这样吗？为了解决我的这个疑问，我又做了一个小实验。<br><strong>实验：</strong> 我在Model类里设置了一个ViewController的strong property。然后再在StoryBoard里拖入一个新的RootViewController用来present起ViewController，然后给ViewController也加了一个button用来dismiss掉ViewController（因为只有这样，系统才会去回收ViewController对象实体）。然后拖一个weak的Model的outlet到controller里。这时候打开Profile（Instruments)里的Leaks运行程序，等到ViewController被present起来后点击button将它dismiss。这时候，我们就会<strong>惊奇</strong>地发现内存泄漏了？！<br>weak的modelOutlet的内存泄漏情况(两个model，是因为我dismiss了ViewController两次)：<br><img class="content-img" src="images/weak版outlet内存泄漏.png" alt="null"><br>然后我们将IBOutlet的引用改成strong的再次执行同样的操作，可以看到内存还是泄漏了。<br><img class="content-img" src="images/strong outlet内存泄漏.png" alt="null"><br>再来看看outlet为weak时，model泄漏时，它的retain/release情况：<br><img class="content-img" src="images/outlet有leaks的log.png" alt="null"><br>我们可以看到，在viewDidAppear以后，它还是保持着1的引用计数。为什么？不应该吧，outlet是weak啊，还有谁能引用它？（接下来是一段没有证据的猜测）那就只能是controller引用了它。意思就是尽管你是weak的outlet，UIKit在用storyBoard初始化ViewController的时候，还是会持有model，这就很奇怪了，感觉和设计的原意不符，但是用instruments来跟踪的结果，似乎就是这样。
+<p>最后第三个问题。<br><strong>猜想：</strong> 接上一个问题的实验。我们都知道ViewController里有一个Model对象了，假如Model里面有一个对ViewController的强引用（危险动作，请勿模仿），那这个Model在ViewController里的引用就必须是弱引用，否则就会引起循环引用而内存泄漏了。<br>然而事实真的是这样吗？为了解决我的这个疑问，我又做了一个小实验。<br><strong>实验：</strong> 我在Model类里设置了一个ViewController的strong property。然后再在StoryBoard里拖入一个新的RootViewController用来present起ViewController，然后给ViewController也加了一个button用来dismiss掉ViewController（因为只有这样，系统才会去回收ViewController对象实体）。然后拖一个weak的Model的outlet到controller里。这时候打开Profile（Instruments)里的Leaks运行程序，等到ViewController被present起来后点击button将它dismiss。这时候，我们就会<strong>惊奇</strong>地发现内存泄漏了？！<br>weak的modelOutlet的内存泄漏情况(两个model，是因为我dismiss了ViewController两次)：<br><img class="content-img" src="images/weak版outlet内存泄漏.png" alt="null"><br>然后我们将IBOutlet的引用改成strong的再次执行同样的操作，可以看到内存还是泄漏了。<br>![](images/strong outlet内存泄漏.png)<br>再来看看outlet为weak时，model泄漏时，它的retain/release情况：<br><img class="content-img" src="images/outlet有leaks的log.png" alt="null"><br>我们可以看到，在viewDidAppear以后，它还是保持着1的引用计数。为什么？不应该吧，outlet是weak啊，还有谁能引用它？（接下来是一段没有证据的猜测）那就只能是controller引用了它。意思就是尽管你是weak的outlet，UIKit在用storyBoard初始化ViewController的时候，还是会持有model，这就很奇怪了，感觉和设计的原意不符，但是用instruments来跟踪的结果，似乎就是这样。
 所以，无论你是用强引用的outlet，还是弱引用的outlet，这种情况下都会内存泄漏。而这一点就恰恰证明了我在第二个问题时的猜测——<strong>在controller从storyboard里生成的时候，系统会以runtime的形式创建它的属性并将强引用绑定到controller上，以此防止神奇的开发者将顶层对象的弱引用拖入到controller时而出乎意料的释放。</strong>  </p>
-<h3 id="-">怪！！！！</h3>
+<h3 id="怪！！！！">怪！！！！</h3>
 <p>到这里，感觉很不爽，挖了很多的坑但是都没有好好的填好。但是至少证明了一件事情，使用UIKit默认的Outlet的强弱引用是可行的。我们只要注意高危操作和循环引用就可以了。而我个人的推荐也和苹果的<a href="https://developer.apple.com/library/content/documentation/Cocoa/Conceptual/LoadingResources/CocoaNibs/CocoaNibs.html#//apple_ref/doc/uid/10000051i-CH4-SW6">Nib Files文档</a>一样，正常视图outlet尽量用weak（尽管用strong没问题），顶层对象尽量用strong。而反向的强引用则可以改成更优雅的weak，甚至代理。</p>
 
         <section class="content-readmore">
@@ -114,7 +118,7 @@
                     <p class="breviary">
                         Yep，finally，eventually，迎来了我的第一篇源码解读类的文章。相比之前粗略看过的ASDK，Lottie可谓是对开发者来说十分之不友好——因为几乎没有注释，本文作为自己的学习记录，也给大家参考。Lottie的官方Demo的一开始是一个很酷炫的header，以及一个只有三行的tableView：从每一行里点进去就发现第二个是一个打字相关的动画（显然作者把A-Z的字母显示都用AfterEffects做了一套动画用在了这里），第三行则是一个页面切换的动画。第一行里则是一个让你浏览整个d……
                     </p>
-                    <time class="content-stamp">Mon Feb 27 2017 01:39:59</time>
+                    <time class="content-stamp">Mon Feb 27 2017 01:39:59 GMT+0800 (中国标准时间)</time>
                     <a href="../最近非常火的动画库——Lottie源码解读/最近非常火的动画库——Lottie源码解读.html" title="跳转至最近非常火的动画库——Lottie源码解读" class="round-border-btn">继续阅读</a>
                 </div>
             
@@ -133,7 +137,7 @@
 其实这篇文章也相当于看了objcio上的避免滥用单例的一篇总结。
 结合自己最近开发的心得，来讲一下单例的一些利与弊吧。首先单例最原始的创建方式就是但是这种创建方式在多线程环境下会出问题，假如两条线程同时执行到if的话，就会各自获取到两个实例了。为了解决这个问题，我们可以想到上锁，于是有了下面这个版本：但是因为我们都知道，访问一个锁的开销很大，考虑到性能的问题，iOS在最后给我们推出了……
                     </p>
-                    <time class="content-stamp">Fri Oct 21 2016 19:48:38</time>
+                    <time class="content-stamp">Fri Oct 21 2016 19:48:38 GMT+0800 (中国标准时间)</time>
                     <a href="../单例猛如虎，请小心使用/单例猛如虎，请小心使用.html" title="跳转至单例猛如虎，请小心使用" class="round-border-btn">继续阅读</a>
                 </div>
             

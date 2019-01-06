@@ -53,11 +53,11 @@
 <div class="content-container">
     <div class="content-inner-wraper">
         <header>
-            <time class="content-stamp">Tue Jun 27 2017 10:04:43</time>
+            <time class="content-stamp">Tue Jun 27 2017 10:04:43 GMT+0800 (中国标准时间)</time>
             <h1>RxSwift的学习之路（二）——Subjects</h1>
         </header>
         <p>最近比较忙，更新得有点慢，望谅解。</p>
-<h3 id="-subject-">什么是Subject？</h3>
+<h3 id="什么是subject？">什么是Subject？</h3>
 <p>上一章我介绍了<code>Observable</code>——一个功能就像一条数据流的类。这一章的内容比较简单，<code>Subject</code>和<code>Observable</code>还是挺相似的，如果说<code>Observable</code>是专门用来被订阅获取数据的一个“被动”的类，那么比起<code>Observable</code>，<code>Subject</code>倒是占据了一点主动。  </p>
 <p>它可以作为一个被订阅者供给外部订阅，也可以作为一个观察者，接收事件，然后发出给订阅者。所以它要比<code>Obsavable</code>更加的灵活一点，按照我的理解，它应该是一种支持一边接收事件，一边接收订阅者的类。也就是说，我可以先创建一个<code>Subject</code>，不着急定制里面的事件（<code>Event</code>），然后先让它被某个订阅者订阅，再往里塞入事件，这样子也可以让订阅者作出响应。我觉得在上代码之前，徒有文字描述应该是相当抽象的了，但是在那之前，我还是得先介绍一下RxSwift里的四种Subjects。</p>
 <ul>
@@ -69,7 +69,7 @@
 <blockquote>
 <p>注：我想你可能会好奇为什么我在介绍这四种<code>subjects</code>的时候老是提到<strong>元素</strong>这个词而不是<strong>事件</strong>这个词，<strong>元素</strong>实际上说的就是<code>next</code>事件中包含的元素。我会这么说的原因主要是上面提到的表现是<code>subjects</code>的主要表现，而它们都针对于<code>next</code>事件，一旦出现一个<code>error</code>或者<code>completed</code>的事件导致它们终结，它们的行为也会变得不一样。</p>
 </blockquote>
-<h3 id="publishsubject-">PublishSubject——一个只会收发新元素的观察者</h3>
+<h3 id="publishsubject一个只会收发新元素的观察者">PublishSubject——一个只会收发新元素的观察者</h3>
 <p>因为不知道怎么用中文称呼<code>subject</code>相关的类，但是它的功能有点像一个针对于<code>Observable</code>数据流的观察者，所以我就称它为观察者吧！
 为了方便测试，我们先写下一些功能代码：</p>
 <pre><code class="hljs swift"><span class="hljs-class"><span class="hljs-keyword">enum</span> <span class="hljs-title">MyError</span>: <span class="hljs-title">Error</span> </span>{
@@ -105,7 +105,7 @@ PS2) 3
 <blockquote>
 <p>向上的箭头代表着一次订阅，乡下的箭头代表着<code>subject</code>对订阅者发送元素。</p>
 </blockquote>
-<h3 id="behaviorsubject-">BehaviorSubject——一个会向每次订阅发出最近接收到的一个元素的观察者</h3>
+<h3 id="behaviorsubject一个会向每次订阅发出最近接收到的一个元素的观察者">BehaviorSubject——一个会向每次订阅发出最近接收到的一个元素的观察者</h3>
 <p><code>BehaviorSubject</code>是一个会向当前订阅发送最近接收的那个元素的功能类，因为有这样的要求，所以初始化一个<code>BehaviorSubject</code>一定要有一个初始值。  上代码：</p>
 <pre><code class="hljs swift">    <span class="hljs-keyword">let</span> subject = <span class="hljs-type">BehaviorSubject</span>(value: <span class="hljs-number">1</span>)
     <span class="hljs-keyword">let</span> disposeBag = <span class="hljs-type">DisposeBag</span>()
@@ -131,7 +131,7 @@ BS) 3
 BS2) 3
 */</span></code></pre><p>为了方便理解，我在每次订阅打印出信息的位置都额外添加了注释，以便让你看懂订阅后打印出对应信息的“位置”（或者说——顺序）。从上面就可以看出来，<code>BehaviorSubject</code>是会对订阅者发送最近的那次订阅的。给出示意图：  </p>
 <p><img class="content-img" src="images/BehaviorSubject.png" alt="null"></p>
-<h3 id="replaysubject-">ReplaySubject——会向每次订阅发送一系列最近元素的观察者</h3>
+<h3 id="replaysubject会向每次订阅发送一系列最近元素的观察者">ReplaySubject——会向每次订阅发送一系列最近元素的观察者</h3>
 <p><code>ReplaySubject</code>会自带一个缓冲区，所以每次初始化的时候需要赋给它一个缓冲区大小。每次它接收到新的元素，都会先存放到自己的缓冲区里，按缓冲区大小来存放指定数量的元素（实际上<code>BehaviorSubject</code>就是一个缓冲区大小为1的<code>ReplaySubject</code>），然后在每次订阅发生的时候，则向订阅者发送缓冲区内的所有元素，然后才发送新接收到的元素。给出一个缓冲区大小为2的<code>ReplaySubject</code>的示意图：  </p>
 <p><img class="content-img" src="images/ReplaySubject.png" alt="null"></p>
 <p>给出样例代码以及输出：  </p>
@@ -159,7 +159,7 @@ RS) 2
 RS) 3
 RS2) 2
 RS2) 3
-*/</span></code></pre><h3 id="variable-subject">Variable——一个不太一样的Subject</h3>
+*/</span></code></pre><h3 id="variable一个不太一样的subject">Variable——一个不太一样的Subject</h3>
 <p><code>Variable</code>实质上是一个对<code>BehaviorSubject</code>还封装了一层的<code>subject</code>，它本身并不继承自<code>Observable</code>，所以它并不能被订阅，它有一个<code>value</code>属性用于访问它最近（也是最后）接收到的一个元素，所以对于<code>Variable</code>你甚至不需要订阅就能访问到它的数据流里的元素。而为了订阅到一个<code>Variable</code>实例的数据流，你得通过它的<code>asObservable()</code>方法去获取到它底层的<code>BehaviorSubject</code>才可以进行订阅。  </p>
 <p>并且，对于<code>Variable</code>而言，你无法像对其它<code>subjects</code>那样用<code>onNext(element)</code>、<code>onCompleted()</code>或者<code>onError(MyError.anError)</code>来让它收到一个新的事件，甚至，它根本没法接收一个<code>completed</code>或者<code>error</code>事件。你只能通过<code>Variable.value</code>属性来为<code>Variable</code>添加一个新的元素。</p>
 <p>还有，由于它是基于<code>BehaviorSubject</code>的封装，所以初始化一个<code>Variable</code>对象的时候也需要指定一个初始值。  </p>
@@ -187,12 +187,12 @@ V) 1
 V2) 1
 V) 2
 V2) 2
-*/</span></code></pre><h3 id="subjects-completed-error-dispose-">Subjects是如何面对<code>completed</code>和<code>error</code>事件的？那<code>dispose()</code>呢？</h3>
+*/</span></code></pre><h3 id="subjects是如何面对completed和error事件的？那dispose呢？">Subjects是如何面对<code>completed</code>和<code>error</code>事件的？那<code>dispose()</code>呢？</h3>
 <p>文章也有点长度了，避免你忘记了我之前定义的一个枚举，我把它再定义一次：</p>
 <pre><code class="hljs swift"><span class="hljs-class"><span class="hljs-keyword">enum</span> <span class="hljs-title">MyError</span>: <span class="hljs-title">Error</span> </span>{
     <span class="hljs-keyword">case</span> anError
-}</code></pre><h4 id="publishsubject-">PublishSubject的情况</h4>
-<h5 id="completed-">completed：</h5>
+}</code></pre><h4 id="publishsubject的情况">PublishSubject的情况</h4>
+<h5 id="completed：">completed：</h5>
 <pre><code class="hljs swift">    <span class="hljs-keyword">let</span> subject = <span class="hljs-type">PublishSubject</span>&lt;<span class="hljs-type">Int</span>&gt;()
     <span class="hljs-keyword">let</span> disposeBag = <span class="hljs-type">DisposeBag</span>()
 
@@ -221,10 +221,10 @@ PS2) completed
 <blockquote>
 <p>个人观点，<code>PublishSubject</code>在接收到<code>completed</code>或者<code>error</code>的事件的时候，表现得就像<code>BehaviorSubject</code>一样。</p>
 </blockquote>
-<h5 id="error-">error:</h5>
+<h5 id="error">error:</h5>
 <p>把上面那段代码中的<code>subject.onCompleted()</code>方法替换为：  </p>
 <pre><code class="hljs swift">subject.onError(<span class="hljs-type">MyError</span>.anError)</code></pre><p>效果和<code>onCompleted()</code>差不多，只不过会输出错误，就不多赘述了。  </p>
-<h5 id="dispose-">dispose:</h5>
+<h5 id="dispose">dispose:</h5>
 <p><code>subjects</code>都是遵循于<code>Disposable</code>协议的，所以它们可以调用<code>dispose()</code>方法来析构自身，又或者用<code>addToDisposeBag(DisposeBag())</code>方法将它加入到垃圾袋里去将它析构。但是由于<code>dispose()</code>可以让<code>subject</code>立刻析构，便于我们看到析构后订阅的结果，所以我们就用它来进行实验吧！  </p>
 <p>把上面那段代码中的<code>subject.onCompleted()</code>方法替换为：</p>
 <pre><code class="hljs swift">subject.dispose()
@@ -235,10 +235,10 @@ PS) 2
 PS) 3
 PS2) Object `RxSwift.PublishSubject&lt;Swift.Int&gt;` was already disposed.
 */</span></code></pre><p>看到了吗？所以在<code>PublishSubject</code>被回收后，它并不会对已订阅的对象发送消息，但是对于后来者，它则会返回一条<em>对象已析构</em>的错误。（当然了，通过<code>.subscribe(onDisposed:{...})</code>的方法可以让既订阅者对析构“事件”进行响应）。  </p>
-<h4 id="behaviorsubject-">BehaviorSubject的情况</h4>
+<h4 id="behaviorsubject的情况">BehaviorSubject的情况</h4>
 <p>它的表现和<code>PublishSubject</code>一致，不作赘述。  </p>
-<h4 id="replaysubject-">ReplaySubject的情况</h4>
-<h5 id="completed-">completed:</h5>
+<h4 id="replaysubject的情况">ReplaySubject的情况</h4>
+<h5 id="completed">completed:</h5>
 <pre><code class="hljs swift">    <span class="hljs-keyword">let</span> subject = <span class="hljs-type">ReplaySubject</span>&lt;<span class="hljs-type">String</span>&gt;.create(bufferSize: <span class="hljs-number">2</span>)
 
     <span class="hljs-keyword">let</span> disposeBag = <span class="hljs-type">DisposeBag</span>()
@@ -267,13 +267,13 @@ RS2) 1
 RS2) 2
 RS2) completed
 */</span></code></pre><p><code>ReplaySubject</code>和前两个<code>subjects</code>不太一样，它有一个缓冲区来装载最近接收的元素。在它接收到<code>completed</code>或者<code>error</code>事件的时候，他会向既订阅者发送该事件；对于新的订阅，它将先发出缓冲区的元素，接着再将导致数据流终结的对象也发送出去。它也有和前两个<code>subjects</code>一样的地方，那就是它被终结后，不会再接收新的元素。</p>
-<h5 id="error-">error:</h5>
+<h5 id="error-1">error:</h5>
 <p>如前文所说，当你向一个<code>ReplaySubject</code>发送一个<code>completed</code>或<code>error</code>事件，会导致它的数据流终结，此后，若再订阅它，<code>ReplaySubject</code>会先向订阅者发送缓冲区内的所有元素，再将导致它终结的<code>completed</code>或者<code>error</code>事件发送给订阅者。</p>
-<h5 id="dispose-">dispose:</h5>
+<h5 id="dispose-1">dispose:</h5>
 <p><code>ReplaySubject</code>在析构以后的表现和前两个<code>subjects</code>一样，它会通知既订阅者调用它们订阅了的<code>onDisposed:{}</code>“事件”里的闭包（假如订阅了的话）。而对于新来的订阅者，它不会像对待<code>completed</code>和<code>error</code>那样发送缓冲区内的元素，而是仅仅抛出一个“对象已析构”的错误。</p>
-<h4 id="variable-">Variable的情况</h4>
+<h4 id="variable的情况">Variable的情况</h4>
 <p>对于<code>Variable</code>而言，它没办法终结，所以也无从讨论。但是它有它强大的地方，它既可以被订阅用来长期获取它的数据流里的数据，也可以被外界一次性的访问来满足某些需求（<code>Variable.value</code>既可以当setter塞入新元素，也可以当作getter访问数据流中最新的一个元素）。  </p>
-<h3 id="-">总结</h3>
+<h3 id="总结">总结</h3>
 <p><code>Subjects</code>和<code>Observable</code>非常相似，导致我们有点难以区分它们。但是其实是有差别的，<code>Observable</code>的表现更像一条没有表情的等待着你处理的数据流，而它也是<code>Subjects</code>的根本所在，而<code>Subjects</code>则提供了你用不同的方式来操作一条数据流——<code>Observable</code>。这也是为什么我说<code>Observable</code>比较被动，而<code>Subjects</code>要偏主动一些的原因。简单来说，<code>Observable</code>的使用流程大概是<em>接收-使用</em>；而<code>Subjects</code>则是<em>接收-采用自身的策略发出-使用</em>。</p>
 <p>在这里我们还可以探寻一下它们的实用价值：  </p>
 <p><code>PublishSubject</code>：总是发出最新的信息，你可以在你仅仅需要用到新数据的地方使用它，并且在你订阅的时候，如果没有新的信息，它将不会回调，在利用它来和界面绑定的时候，你得有一个默认的字段放在你界面上，以免界面上什么都没有。  </p>
@@ -296,7 +296,7 @@ RS2) completed
                         耗时一个半月，终于在跨年之前完成了我的博客的制作～这个博客，是由Turto生成的。而Turto就是由我自制的一个用来生成我的网站的工具。
 它大概长这个样子：一个很关键的原因是在3月份的时候，我的旧博客引用的评论系统多说倒闭了，我当时的博客是由hexo生成的，使用的主题是TKL，它只支持多说作为评论系统。然后迫于无奈之下，我打算更换主题，没想到把自己的hexo弄挂了（折腾了两三周也没折腾好），所以我就把hexo生成的博客给搁置了，暂时在简书上更新博客。后面想到今年自己也学了些前端的知识，干脆弄一个……
                     </p>
-                    <time class="content-stamp">Sun Dec 17 2017 18:20:53</time>
+                    <time class="content-stamp">Sun Dec 17 2017 18:20:53 GMT+0800 (中国标准时间)</time>
                     <a href="../终于，由我自制的博客发布了/终于，由我自制的博客发布了.html" title="跳转至终于，由我自制的博客发布了" class="round-border-btn">继续阅读</a>
                 </div>
             
@@ -311,9 +311,9 @@ RS2) completed
                     </h2>
 
                     <p class="breviary">
-                        最近在学习swift，看着喵神翻译的《Swift进阶》，一直看着颇感疲乏，于是想边学边实践来让自己不那么的犯困。毕竟纸上得来终觉浅嘛~所以我就顺手入了Raywenderlich上的RxSwift的书籍（这是一本好书，延续了Raywenderlich一贯的风格——讲课与动手相结合，每一章都有一个样例程序让你一步步跟着去实现，结尾还会有challenge）。并且，这也是我在简书的第一篇文章，主要是我的手提上的hexo挂了，挂在github上的博客也没法更新了，弄了两个星期都没弄好，没辙了。然而学习仍……
+                        最近在学习swift，看着喵神翻译的《Swift进阶》，一直看着颇感疲乏，于是想边学边实践来让自己不那么的犯困。毕竟纸上得来终觉浅嘛所以我就顺手入了Raywenderlich上的RxSwift的书籍（这是一本好书，延续了Raywenderlich一贯的风格——讲课与动手相结合，每一章都有一个样例程序让你一步步跟着去实现，结尾还会有challenge）。并且，这也是我在简书的第一篇文章，主要是我的手提上的hexo挂了，挂在github上的博客也没法更新了，弄了两个星期都没弄好，没辙了。然而学习仍在……
                     </p>
-                    <time class="content-stamp">Mon Jun 12 2017 12:12:20</time>
+                    <time class="content-stamp">Mon Jun 12 2017 12:12:20 GMT+0800 (中国标准时间)</time>
                     <a href="../RxSwift的学习之路（一）——Observable/RxSwift的学习之路（一）——Observable.html" title="跳转至RxSwift的学习之路（一）——Observable" class="round-border-btn">继续阅读</a>
                 </div>
             
